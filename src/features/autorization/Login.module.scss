@@ -1,0 +1,29 @@
+.form {
+  display: flex;
+  margin: 0 auto;
+  margin-top: 100px;
+  width: 40%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  @media screen and (max-width: 624px) {
+    width: 90%;
+  }
+
+  & input{
+    width: 100%;
+    margin: 5px 0 0 0;
+  }
+  .button {
+    margin-top: 20px;
+    cursor: pointer;
+    background-color: teal;
+    color: white;
+    font-size: 16px;
+    border: 1px solid teal;
+    border-radius: 5px;
+    align-self: auto;
+    padding: 12px 24px;
+    margin-bottom: 10px;
+  }
+}
