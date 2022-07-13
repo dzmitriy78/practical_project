@@ -1,0 +1,37 @@
+.header {
+  height: 80px;
+  background-color: cadetblue;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 10px;
+
+  .btn {
+    cursor: pointer;
+    background-color: teal;
+    width: 170px;
+    color: white;
+    font-size: 20px;
+    border: 1px solid darkslateblue;
+    border-radius: 5px;
+    align-self: auto;
+    padding: 12px 24px;
+  }
+
+  .item {
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+  }
+
+  .item:hover {
+    color: darkslateblue;
+  }
+
+  .active {
+    color: darkslateblue;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+}
