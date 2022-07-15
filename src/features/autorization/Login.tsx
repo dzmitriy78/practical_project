@@ -1,9 +1,16 @@
 import React from 'react';
 import {useFormik} from "formik";
 import style from "./Login.module.scss"
+import {loginTC} from "../../main/bll/loginReducer";
+import {useDispatch, useSelector} from "react-redux";
+import {Navigate} from "react-router-dom";
+import {AppStoreType} from "../../main/bll/store";
 
 const Login = () => {
 
+    const dispatch = useDispatch()
+
+    let isAuth = useSelector<AppStoreType, boolean>((state)=>state.login.isAuth)
 
     const formik = useFormik({
         validate: (values) => {
@@ -13,7 +20,7 @@ const Login = () => {
             } else if (!/^[A-Z\d._%+-]+@[A-Z\d.-]+\.[A-Z]{2,}$/i.test(values.email)) {
                 errors.email = 'Invalid email address';
             }
-            if (values.password.length < 4) {
+            if (values.password.length < 8) {
                 errors.password = 'password is short';
             }
             return errors;
@@ -24,15 +31,18 @@ const Login = () => {
             rememberMe: false
         },
         onSubmit: (values) => {
-            alert(JSON.stringify(values))
-            formik.resetForm()
+            // @ts-ignore
+            dispatch(loginTC(values))
+            //formik.resetForm()
         }
     })
     /*
         if (isLoggedIn) {
             return <Redirect to={"/"} />
         }*/
-
+    if (isAuth) {
+        return <Navigate replace to="/profile"/>
+    }
 
     return <div>
 

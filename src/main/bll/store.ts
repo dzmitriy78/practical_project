@@ -18,4 +18,4 @@ const store = createStore(rootReducer, applyMiddleware(thunkMiddleware))
 
 export default store
 
-export type AppStore = ReturnType<typeof rootReducer>
+export type AppStoreType = ReturnType<typeof rootReducer>

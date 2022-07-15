@@ -1,17 +1,22 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import Main from "./main/Main";
-import {Provider} from "react-redux";
-import store from "./main/bll/store";
+import {useDispatch} from "react-redux";
 import {BrowserRouter} from "react-router-dom";
+import {initializeAppTC} from "./main/bll/loginReducer";
 
 const App: React.FC = () => {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        // @ts-ignore
+        dispatch(initializeAppTC())
+    }, [])
+
     return (
         <div className="App">
             <BrowserRouter>
-                <Provider store={store}>
                     <Main/>
-                </Provider>
             </BrowserRouter>
         </div>
     );
