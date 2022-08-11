@@ -4,19 +4,19 @@ import Main from "./main/Main";
 import {useDispatch} from "react-redux";
 import {BrowserRouter} from "react-router-dom";
 import {initializeAppTC} from "./main/bll/loginReducer";
+import {AppDispatch} from "./main/bll/store";
 
 const App: React.FC = () => {
-    const dispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
     useEffect(() => {
-        // @ts-ignore
         dispatch(initializeAppTC())
     }, [])
 
     return (
         <div className="App">
             <BrowserRouter>
-                    <Main/>
+                <Main/>
             </BrowserRouter>
         </div>
     );

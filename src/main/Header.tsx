@@ -4,23 +4,22 @@ import {FORGOT_PATH, LOGIN_PATH, NEW_PROFILE_PATH, PROFILE_PATH, REGISTER_PATH} 
 import style from "./Header.module.scss";
 import {logoutTC} from "./bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppStoreType} from "./bll/store";
+import {AppDispatch, AppStoreType} from "./bll/store";
 
 
 const Header = () => {
 
-    let isAuth = useSelector<AppStoreType, boolean>((state)=>state.login.isAuth)
+    let isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
 
     const [show, setShow] = useState(false)
     const setActive = ({isActive}: { isActive: boolean }): string => isActive ? style.active : style.item
     const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
     const loginHandler = () => {
         navigate(LOGIN_PATH)
     }
     const logoutHandler = () => {
-        // @ts-ignore
         dispatch(logoutTC())
         navigate(LOGIN_PATH)
     }

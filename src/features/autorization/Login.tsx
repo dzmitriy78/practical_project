@@ -4,13 +4,13 @@ import style from "./Login.module.scss"
 import {loginTC} from "../../main/bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
-import {AppStoreType} from "../../main/bll/store";
+import {AppDispatch, AppStoreType} from "../../main/bll/store";
 
 const Login = () => {
 
-    const dispatch = useDispatch()
+    const dispatch: AppDispatch = useDispatch()
 
-    let isAuth = useSelector<AppStoreType, boolean>((state)=>state.login.isAuth)
+    let isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
 
     const formik = useFormik({
         validate: (values) => {
@@ -30,10 +30,9 @@ const Login = () => {
             password: '',
             rememberMe: false
         },
-        onSubmit: (values) => {
-            // @ts-ignore
-            dispatch(loginTC(values))
-            //formik.resetForm()
+        onSubmit: async (values) => {
+            await dispatch(loginTC(values))
+            formik.resetForm()
         }
     })
     /*

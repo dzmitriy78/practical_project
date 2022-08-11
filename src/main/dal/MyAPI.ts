@@ -5,22 +5,21 @@ const settings = {
 }
 
 const instance = axios.create({
-   baseURL: 'http://localhost:7542/2.0/',
+    baseURL: 'http://localhost:7542/2.0/',
     ...settings
 })
 
 export const authAPI = {
     me() {
-        return  instance.post<loginResponseType>('auth/me');
+        return instance.post<loginResponseType>('auth/me');
     },
     login(data: LoginParamsType) {
-        return  instance.post<loginResponseType>('auth/login', data);
+        return instance.post<loginResponseType>('auth/login', data);
     },
     logout() {
-        return instance.delete<{info: string}>('auth/me');
+        return instance.delete<{ info: string }>('auth/me');
     },
 }
-
 
 
 export type LoginParamsType = {
