@@ -4,6 +4,7 @@ import {AppStoreType} from "./store";
 
 const SET_USER_DATA = "loginReducer/SET-USER-DATA"
 const SET_APP_INITIALIZED = "loginReducer/SET-APP-INITIALISED"
+const SET_ERROR = "loginReducer/SET-ERROR"
 
 export const setAuthUserData = (data: LoginInitialStateType) => ({
     type: SET_USER_DATA,
@@ -13,6 +14,11 @@ export const setAuthUserData = (data: LoginInitialStateType) => ({
 export const setAppInitializedAC = (isInitialized: boolean) => ({
     type: SET_APP_INITIALIZED,
     payload: {isInitialized}
+}) as const
+
+export const setError = (error: string) => ({
+    type: SET_ERROR,
+    payload: {error}
 }) as const
 
 const loginInitialState: LoginInitialStateType = {
@@ -32,7 +38,8 @@ const loginInitialState: LoginInitialStateType = {
         verified: false,
         __v: 0,
         _id: ""
-    }
+    },
+    error: null
 }
 
 const loginReducer = (state = loginInitialState, action: AuthActionType): LoginInitialStateType => {
@@ -49,6 +56,11 @@ const loginReducer = (state = loginInitialState, action: AuthActionType): LoginI
                 ...state,
                 isInitialized: action.payload.isInitialized,
             }
+        case SET_ERROR:
+            return {
+                ...state,
+                error: action.payload.error
+            }
         default: {
             return state
         }
@@ -57,41 +69,39 @@ const loginReducer = (state = loginInitialState, action: AuthActionType): LoginI
 export default loginReducer;
 
 export const authMe = (): ThunkType => async (dispatch) => {
-    const data = await authAPI.me()
     try {
+        const data = await authAPI.me()
         if (!data.data.in) {
-            let res = data.data;
-            dispatch(setAuthUserData({isAuth: true, isInitialized: true, userData: res}))
+            dispatch(setAuthUserData({isAuth: true, userData: data.data}))
         }
     } catch (e: any) {
-        e.response
+        const error = e.response
             ? e.response.data.error
             : (e.message + ', more details in the console')
-        console.log('Error: ' + {...e})
+        console.warn('Error: ' + {...error})
     }
 }
 
-
 export const loginTC = (data: LoginParamsType): ThunkType => async (dispatch) => {
     //dispatch(setAppStatusAC({status:'loading'}))
-    await authAPI.login(data)
     try {
+        await authAPI.login(data)
         await dispatch(authMe())
     } catch (e: any) {
-        /* const error = e.response
-             ? e.response.data.error
-             : (e.message + ', more details in the console')
- */
-        console.log('Error: ' + {...e})
+        const error = e.response
+            ? e.response.data.error
+            : (e.message + ', more details in the console')
+        /*console.log('Error: ' + {...e})*/
+        dispatch(setError(error))
     }
 }
 
 export const logoutTC = (): ThunkType => async (dispatch) => {
-    await authAPI.logout()
+
     try {
+        await authAPI.logout()
         dispatch(setAuthUserData({
             isAuth: false,
-            isInitialized: true,
             userData: {
                 avatar: "",
                 created: "",
@@ -112,41 +122,37 @@ export const logoutTC = (): ThunkType => async (dispatch) => {
         const error = e.response
             ? e.response.data.error
             : (e.message + ', more details in the console')
+        dispatch(setError(error))
     }
 }
 
 export const initializeAppTC = (): ThunkType => async (dispatch) => {
     const res = await authAPI.me()
-    try {
-        if (!res.data.in) {
-            dispatch(setAuthUserData({isAuth: true, isInitialized: true, userData: res.data}))
-            dispatch(setAppInitializedAC(true));
-        }
-    } catch (e: any) {
-        const error = e.response
-            ? e.response.data.error
-            : (e.message + ', more details in the console')
+    if (!res.data.in) {
+        dispatch(setAuthUserData({isAuth: true, userData: res.data}))
+        dispatch(setAppInitializedAC(true))
     }
 }
 
 export type LoginInitialStateType = {
     isAuth: boolean
-    isInitialized: boolean
+    isInitialized?: boolean
     userData: {
-        avatar: string,
-        created: string,
-        email: string,
-        isAdmin: boolean,
-        name: string,
-        publicCardPacksCount: number,
-        rememberMe: boolean,
-        token: string,
-        tokenDeathTime: number,
-        updated: string,
-        verified: boolean,
-        __v?: number,
+        avatar: string
+        created: string
+        email: string
+        isAdmin: boolean
+        name: string
+        publicCardPacksCount: number
+        rememberMe: boolean
+        token: string
+        tokenDeathTime: number
+        updated: string
+        verified: boolean
+        __v?: number
         _id?: string
     }
+    error?: string | null
 }
 type SetUserDataAT = {
     type: typeof SET_USER_DATA,
@@ -156,8 +162,9 @@ type SetAppInitializedAT = {
     type: typeof SET_APP_INITIALIZED,
     payload: AppInitializedType
 }
+export type SetErrorType = ReturnType<typeof setError>
 
-type AuthActionType = SetUserDataAT | SetAppInitializedAT
+type AuthActionType = SetUserDataAT | SetAppInitializedAT | SetErrorType
 
 type AuthPayloadType = {
     data: LoginInitialStateType
@@ -165,4 +172,4 @@ type AuthPayloadType = {
 type AppInitializedType = {
     isInitialized: boolean
 }
-export type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, AuthActionType>
+type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, AuthActionType>

@@ -20,7 +20,6 @@ const Header = () => {
         navigate(LOGIN_PATH)
     }
     const logoutHandler = () => {
-        // @ts-ignore
         dispatch(logoutTC())
         navigate(LOGIN_PATH)
     }

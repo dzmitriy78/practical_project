@@ -7,7 +7,7 @@ const Welcome = () => {
     let userData = useSelector<AppStoreType, loginResponseType>(state => state.login.userData)
     return (
         <div>
-          "Привет, " + {userData.name}
+            "Привет, " + {userData.name}
         </div>
     );
 };
