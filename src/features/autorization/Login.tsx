@@ -31,6 +31,7 @@ const Login = () => {
             rememberMe: false
         },
         onSubmit: async (values) => {
+            // @ts-ignore
             await dispatch(loginTC(values))
             formik.resetForm()
         }

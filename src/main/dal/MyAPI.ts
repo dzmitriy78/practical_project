@@ -29,19 +29,19 @@ export type LoginParamsType = {
 }
 
 export type loginResponseType = {
-    _id: string
-    email: string
-    rememberMe: boolean
-    isAdmin: boolean
-    name: string
-    verified: boolean
-    publicCardPacksCount: number
-    created: string
-    updated: string
-    __v: number
-    token: string
-    tokenDeathTime: number
-    avatar: string
+    avatar: string,
+    created: string,
+    email: string,
+    isAdmin: boolean,
+    name: string,
+    publicCardPacksCount: number,
+    rememberMe: boolean,
+    token: string,
+    tokenDeathTime: number,
+    updated: string,
+    verified: boolean,
+    __v?: number,
+    _id?: string
     error?: string
     in?: string
 }

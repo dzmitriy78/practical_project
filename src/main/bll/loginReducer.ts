@@ -5,9 +5,9 @@ import {AppStoreType} from "./store";
 const SET_USER_DATA = "loginReducer/SET-USER-DATA"
 const SET_APP_INITIALIZED = "loginReducer/SET-APP-INITIALISED"
 
-export const setAuthUserData = (name: string | null, email: string | null, avatar: string | null, isAuth: boolean): AuthActionType => ({
+export const setAuthUserData = (data: LoginInitialStateType) => ({
     type: SET_USER_DATA,
-    payload: {name, email, avatar, isAuth}
+    payload: {data}
 }) as const;
 
 export const setAppInitializedAC = (isInitialized: boolean) => ({
@@ -17,15 +17,32 @@ export const setAppInitializedAC = (isInitialized: boolean) => ({
 
 const loginInitialState: LoginInitialStateType = {
     isAuth: false,
-    isInitialized: false
+    isInitialized: false,
+    userData: {
+        avatar: "",
+        created: "",
+        email: "",
+        isAdmin: false,
+        name: "",
+        publicCardPacksCount: 0,
+        rememberMe: false,
+        token: "",
+        tokenDeathTime: 0,
+        updated: "",
+        verified: false,
+        __v: 0,
+        _id: ""
+    }
 }
 
-const loginReducer = (state = loginInitialState, action: { type: string; payload: { isInitialized: boolean; isAuth?: boolean; }; }): LoginInitialStateType => {
+const loginReducer = (state = loginInitialState, action: AuthActionType): LoginInitialStateType => {
     switch (action.type) {
         case SET_USER_DATA:
             return {
                 ...state,
-                ...action.payload,
+                isAuth: action.payload.data.isAuth,
+                isInitialized: action.payload.data.isInitialized,
+                userData: action.payload.data.userData
             }
         case SET_APP_INITIALIZED:
             return {
@@ -43,16 +60,14 @@ export const authMe = (): ThunkType => async (dispatch) => {
     const data = await authAPI.me()
     try {
         if (!data.data.in) {
-            let {name, email, avatar} = data.data;
-            dispatch(setAuthUserData(name, email, avatar, true))
-            alert("Привет, " + name);
+            let res = data.data;
+            dispatch(setAuthUserData({isAuth: true, isInitialized: true, userData: res}))
         }
-    } catch {
-        (e: any) => {
-            const error = e.response
-                ? e.response.data.error
-                : (e.message + ', more details in the console');
-        }
+    } catch (e: any) {
+        e.response
+            ? e.response.data.error
+            : (e.message + ', more details in the console')
+        console.log('Error: ' + {...e})
     }
 }
 
@@ -62,21 +77,41 @@ export const loginTC = (data: LoginParamsType): ThunkType => async (dispatch) =>
     await authAPI.login(data)
     try {
         await dispatch(authMe())
-    } catch {
-        (e: any) => {
-            const error = e.response
-                ? e.response.data.error
-                : (e.message + ', more details in the console');
-            // handleServerNetworkError(error, dispatch)
-        }
+    } catch (e: any) {
+        /* const error = e.response
+             ? e.response.data.error
+             : (e.message + ', more details in the console')
+ */
+        console.log('Error: ' + {...e})
     }
 }
 
 export const logoutTC = (): ThunkType => async (dispatch) => {
     await authAPI.logout()
     try {
-        dispatch(setAuthUserData(null, null, null, false))
-    } catch (e) {
+        dispatch(setAuthUserData({
+            isAuth: false,
+            isInitialized: true,
+            userData: {
+                avatar: "",
+                created: "",
+                email: "",
+                isAdmin: false,
+                name: "",
+                publicCardPacksCount: 0,
+                rememberMe: false,
+                token: "",
+                tokenDeathTime: 0,
+                updated: "",
+                verified: false,
+                __v: 0,
+                _id: ""
+            }
+        }))
+    } catch (e: any) {
+        const error = e.response
+            ? e.response.data.error
+            : (e.message + ', more details in the console')
     }
 }
 
@@ -84,18 +119,34 @@ export const initializeAppTC = (): ThunkType => async (dispatch) => {
     const res = await authAPI.me()
     try {
         if (!res.data.in) {
-            let {name, email, avatar} = res.data;
-            dispatch(setAuthUserData(name, email, avatar, true))
+            dispatch(setAuthUserData({isAuth: true, isInitialized: true, userData: res.data}))
             dispatch(setAppInitializedAC(true));
         }
-    } catch (e) {
-
+    } catch (e: any) {
+        const error = e.response
+            ? e.response.data.error
+            : (e.message + ', more details in the console')
     }
 }
 
 export type LoginInitialStateType = {
     isAuth: boolean
     isInitialized: boolean
+    userData: {
+        avatar: string,
+        created: string,
+        email: string,
+        isAdmin: boolean,
+        name: string,
+        publicCardPacksCount: number,
+        rememberMe: boolean,
+        token: string,
+        tokenDeathTime: number,
+        updated: string,
+        verified: boolean,
+        __v?: number,
+        _id?: string
+    }
 }
 type SetUserDataAT = {
     type: typeof SET_USER_DATA,
@@ -108,12 +159,8 @@ type SetAppInitializedAT = {
 
 type AuthActionType = SetUserDataAT | SetAppInitializedAT
 
-
 type AuthPayloadType = {
-    name: string | null
-    email: string | null
-    avatar: string | null
-    isAuth: boolean
+    data: LoginInitialStateType
 }
 type AppInitializedType = {
     isInitialized: boolean
