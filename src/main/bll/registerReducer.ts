@@ -1,7 +1,8 @@
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
 import {registerAPI, RegisterParamsType} from "../dal/MyAPI";
-import {authMe, setError, SetErrorType} from "./loginReducer";
+import {authMe, SetErrorType} from "./loginReducer";
+import {errorHandler} from "./errorHandler";
 
 const SET_REGISTER = "registerReducer/SET-REGISTER"
 
@@ -37,11 +38,7 @@ export const registerTC = (data: RegisterParamsType): ThunkType => async (dispat
         dispatch(setRegister({email: res.data.addedUser.email, name: res.data.addedUser.name}))
         dispatch(authMe())
     } catch (e: any) {
-        const error = e.response
-            ? e.response.data.error
-            : (e.message + ', more details in the console')
-        /*console.log('Error: ' + {...error})*/
-        dispatch(setError(error))
+        errorHandler(e, dispatch)
     }
 }
 

@@ -1,6 +1,7 @@
 import {ThunkAction} from "redux-thunk";
 import {authAPI, LoginParamsType} from "../dal/MyAPI"
 import {AppStoreType} from "./store";
+import {errorHandler} from "./errorHandler";
 
 const SET_USER_DATA = "loginReducer/SET-USER-DATA"
 const SET_APP_INITIALIZED = "loginReducer/SET-APP-INITIALISED"
@@ -9,7 +10,7 @@ const SET_ERROR = "loginReducer/SET-ERROR"
 export const setAuthUserData = (data: LoginInitialStateType) => ({
     type: SET_USER_DATA,
     payload: {data}
-}) as const;
+}) as const
 
 export const setAppInitializedAC = (isInitialized: boolean) => ({
     type: SET_APP_INITIALIZED,
@@ -71,14 +72,11 @@ export default loginReducer;
 export const authMe = (): ThunkType => async (dispatch) => {
     try {
         const data = await authAPI.me()
-        if (!data.data.in) {
-            dispatch(setAuthUserData({isAuth: true, userData: data.data}))
+        if (data) {
+            dispatch(setAuthUserData({isAuth: true, userData: data}))
         }
     } catch (e: any) {
-        const error = e.response
-            ? e.response.data.error
-            : (e.message + ', more details in the console')
-        console.warn('Error: ' + {...error})
+        errorHandler(e, dispatch)
     }
 }
 
@@ -88,11 +86,7 @@ export const loginTC = (data: LoginParamsType): ThunkType => async (dispatch) =>
         await authAPI.login(data)
         await dispatch(authMe())
     } catch (e: any) {
-        const error = e.response
-            ? e.response.data.error
-            : (e.message + ', more details in the console')
-        /*console.log('Error: ' + {...e})*/
-        dispatch(setError(error))
+        errorHandler(e, dispatch)
     }
 }
 
@@ -119,18 +113,19 @@ export const logoutTC = (): ThunkType => async (dispatch) => {
             }
         }))
     } catch (e: any) {
-        const error = e.response
-            ? e.response.data.error
-            : (e.message + ', more details in the console')
-        dispatch(setError(error))
+        errorHandler(e, dispatch)
     }
 }
 
 export const initializeAppTC = (): ThunkType => async (dispatch) => {
-    const res = await authAPI.me()
-    if (!res.data.in) {
-        dispatch(setAuthUserData({isAuth: true, userData: res.data}))
-        dispatch(setAppInitializedAC(true))
+    try {
+        const data = await authAPI.me()
+        if (data) {
+            dispatch(setAuthUserData({isAuth: true, userData: data}))
+            dispatch(setAppInitializedAC(true))
+        }
+    } catch (e: any) {
+        errorHandler(e, dispatch)
     }
 }
 
