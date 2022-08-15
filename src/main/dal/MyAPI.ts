@@ -11,7 +11,7 @@ const instance = axios.create({
 
 export const authAPI = {
     me() {
-        return instance.post<loginResponseType>('auth/me')
+        return instance.post<loginResponseType>('auth/me', {})
             .then(res => res.data)
             .catch(errorsAPIHandler)
     },
@@ -21,7 +21,7 @@ export const authAPI = {
             .catch(errorsAPIHandler)
     },
     logout() {
-        return instance.delete<{ info: string }>('auth/me')
+        return instance.delete<{ info: string }>('auth/me', {})
             .then(res => res.data)
             .catch(errorsAPIHandler)
     },
@@ -31,6 +31,11 @@ export const registerAPI = {
     register(data: RegisterParamsType) {
         return instance.post<RegisterResponseType>("auth/register", data)
 
+    },
+    updateUser(name: string, avatar: string) {
+        return instance.put<UpdatedUserType>('auth/me', {name, avatar})
+            .then(res=>res.data)
+            .catch(errorsAPIHandler)
     }
 }
 
@@ -95,4 +100,27 @@ export type RegisterResponseType = {
         updated: string
         __v: number
     }
+}
+export type UpdateUserParamsType = {
+    name: string
+    avatar: string
+}
+export type UpdatedUserType = {
+    updatedUser: {
+        _id?: string,
+        email?: string,
+        rememberMe?: boolean,
+        isAdmin?: boolean,
+        name: string,
+        verified?: boolean,
+        publicCardPacksCount?: number,
+        created?: string,
+        updated?: string,
+        __v?: number,
+        token?: string,
+        tokenDeathTime?: number,
+        avatar: string
+    },
+    token?: string,
+    tokenDeathTime?: number
 }
