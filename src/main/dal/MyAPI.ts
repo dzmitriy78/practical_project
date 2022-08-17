@@ -36,6 +36,12 @@ export const registerAPI = {
         return instance.put<UpdatedUserType>('auth/me', {name, avatar})
             .then(res=>res.data)
             .catch(errorsAPIHandler)
+    },
+    forgot(email: string, from: string = "hhh", message: string = "fff") {
+       return  instance.post<ForgotResponseType>("auth/forgot",{email, from, message })
+
+           .then(res=>res.data)
+           .catch(errorsAPIHandler)
     }
 }
 
@@ -123,4 +129,14 @@ export type UpdatedUserType = {
     },
     token?: string,
     tokenDeathTime?: number
+}
+
+export type ForgotResponseType = {
+    error?: string,
+    info: string,
+    errorObject?: {
+        code: string,
+        command: string
+    },
+    in: string
 }
