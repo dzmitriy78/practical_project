@@ -21,7 +21,7 @@ const Login = () => {
             } else if (!/^[A-Z\d._%+-]+@[A-Z\d.-]+\.[A-Z]{2,}$/i.test(values.email)) {
                 errors.email = 'Invalid email address';
             }
-            if (values.password.length < 8) {
+            if (values.password.length < 7) {
                 errors.password = 'password is short';
             }
             return errors;
@@ -32,6 +32,7 @@ const Login = () => {
             rememberMe: false
         },
         onSubmit: async (values) => {
+            // @ts-ignore
             await dispatch(loginTC(values))
             formik.resetForm()
         }

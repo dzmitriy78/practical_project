@@ -23,6 +23,7 @@ const Forgot = () => {
             email: ''
         },
         onSubmit:  (values) => {
+            // @ts-ignore
             dispatch(forgotPasswordTC(values.email))
             formik.resetForm()
             /*  navigate("/profile")*/

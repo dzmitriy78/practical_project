@@ -3,9 +3,12 @@ import axios from "axios"
 const settings = {
     withCredentials: true
 }
-
+const backendUrl = {
+    local: 'http://localhost:7542/2.0/',
+    heroku: 'https://neko-back.herokuapp.com/2.0/'
+}
 const instance = axios.create({
-    baseURL: 'http://localhost:7542/2.0/',
+    baseURL: backendUrl.heroku,
     ...settings
 })
 
@@ -24,7 +27,7 @@ export const authAPI = {
         return instance.delete<{ info: string }>('auth/me', {})
             .then(res => res.data)
             .catch(errorsAPIHandler)
-    },
+    }
 }
 
 export const registerAPI = {
@@ -39,9 +42,13 @@ export const registerAPI = {
     },
     forgot(email: string, from: string = "hhh", message: string = "fff") {
        return  instance.post<ForgotResponseType>("auth/forgot",{email, from, message })
-
            .then(res=>res.data)
            .catch(errorsAPIHandler)
+    },
+    setNewPassword (password: string, resetPasswordToken: string) {
+        return instance.post<setNewPasswordResponseType>("auth/set-new-password",{password, resetPasswordToken})
+            .then(res=>res.data)
+            .catch(errorsAPIHandler)
     }
 }
 
@@ -139,4 +146,8 @@ export type ForgotResponseType = {
         command: string
     },
     in: string
+}
+export type setNewPasswordResponseType = {
+    info: string
+    error?: string
 }

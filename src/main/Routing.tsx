@@ -3,13 +3,13 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import Login from "../features/autorization/Login";
 import Register from "../features/autorization/Register";
 import Forgot from "../features/autorization/Forgot";
-import NewProfile from "../features/autorization/NewProfile";
+import SetNewPassword from "../features/autorization/SetNewPassword";
 import Profile from "../features/autorization/Profile";
 
 export const LOGIN_PATH = '/login'
 export const REGISTER_PATH = '/register'
 export const FORGOT_PATH = '/forgot'
-export const NEW_PROFILE_PATH = '/newProfile'
+export const NEW_PASSWORD_PATH = '/setNewPassword'
 export const PROFILE_PATH = '/profile'
 
 const Routing = () => {
@@ -21,7 +21,7 @@ const Routing = () => {
                 <Route path={LOGIN_PATH} element={<Login/>}/>
                 <Route path={REGISTER_PATH} element={<Register/>}/>
                 <Route path={FORGOT_PATH} element={<Forgot/>}/>
-                <Route path={NEW_PROFILE_PATH} element={<NewProfile/>}/>
+                <Route path={NEW_PASSWORD_PATH} element={<SetNewPassword/>}/>
                 <Route path={PROFILE_PATH} element={<Profile/>}/>
                 <Route path="*" element={
                     <div style={{fontSize: 100, color: "teal"}}>

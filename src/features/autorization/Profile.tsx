@@ -22,11 +22,11 @@ const Profile = () => {
         setNewName(e.currentTarget.value)
     }
     const setUpdateUser = async () => {
-
+        setEditAvatar(false)
+        setEditName(false)
         if (newName || newAvatar) {
+            // @ts-ignore
             await dispatch(updateUserTC(newName, newAvatar))
-            setEditAvatar(false)
-            setEditName(false)
             setNewName("")
             setNewAvatar("")
         }

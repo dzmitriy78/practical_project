@@ -10,6 +10,7 @@ const App: React.FC = () => {
 
 
     useEffect(() => {
+        // @ts-ignore
         dispatch(initializeAppTC())
     }, [])
 
