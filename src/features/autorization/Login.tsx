@@ -1,17 +1,16 @@
 import React from 'react';
 import {useFormik} from "formik";
 import style from "./Login.module.scss"
-import {loginTC} from "../../main/bll/loginReducer";
+import {LoginInitialStateType, loginTC} from "../../main/bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {Navigate} from "react-router-dom";
+import {Navigate, NavLink} from "react-router-dom";
 import {AppDispatch, AppStoreType} from "../../main/bll/store";
+import {FORGOT_PATH, PROFILE_PATH, REGISTER_PATH} from "../../main/Routing";
 
 const Login = () => {
 
     const dispatch: AppDispatch = useDispatch()
-
-    let isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
-    const error = useSelector<AppStoreType, string | null | undefined>(state => state.login.error)
+    const {isAuth, error} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
 
     const formik = useFormik({
         validate: (values) => {
@@ -41,11 +40,15 @@ const Login = () => {
         if (isLoggedIn) {
             return <Redirect to={"/"} />
         }*/
+
     if (isAuth) {
-        return <Navigate replace to="/profile"/>
+        return <Navigate replace to={PROFILE_PATH}/>
     }
 
     return <div>
+        <div>Please enter your login and password or <br/>
+            <NavLink to={REGISTER_PATH}>Register</NavLink>
+        </div>
         <form className={style.form} onSubmit={formik.handleSubmit}>
             {error && <div>
                 {error}
@@ -70,9 +73,11 @@ const Login = () => {
                 {...formik.getFieldProps("rememberMe")}
                 checked={formik.values.rememberMe}
             />
-
             <button type={'submit'} className={style.button}>Login</button>
         </form>
+        <div>Forgot your password? <br/>
+            <NavLink to={FORGOT_PATH}>Restore password</NavLink>
+        </div>
     </div>
 }
 

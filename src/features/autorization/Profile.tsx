@@ -37,7 +37,7 @@ const Profile = () => {
                 ? <div>
                     <div onBlur={setUpdateUser}>
                         <div onDoubleClick={() => setEditAvatar(true)}>
-                            <img src={userData.avatar} alt={"avatar"}/>
+                            <img style={{maxWidth: "100px"}} src={userData.avatar} alt={"avatar"}/>
                         </div>
                         {editAvatar && <input placeholder={"insert avatar"}
                                               autoFocus={true}
@@ -59,7 +59,7 @@ const Profile = () => {
 
                 </div>
                 : <div>Profile is empty.<br/> <span>Please </span>
-                    <NavLink to={LOGIN_PATH}>Login</NavLink> <span>or </span>
+                    <NavLink to={LOGIN_PATH}>Log in</NavLink> <span>or </span>
                     <NavLink to={REGISTER_PATH}>Register</NavLink>
                 </div>
             }

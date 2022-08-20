@@ -28,11 +28,12 @@ const Register: React.FC = () => {
             email: '',
             password: ''
         },
-        onSubmit: async (values) => {
-            // @ts-ignore
-            await dispatch(registerTC(values))
+        onSubmit: (values) => {
+
+             // @ts-ignore
+            dispatch(registerTC(values))
             formik.resetForm()
-            /*  navigate("/profile")*/
+            navigate("/profile")
         }
     })
     /*

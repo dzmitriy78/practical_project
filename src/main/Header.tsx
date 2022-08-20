@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {NavLink, useNavigate} from "react-router-dom";
-import {FORGOT_PATH, LOGIN_PATH, NEW_PASSWORD_PATH, PROFILE_PATH, REGISTER_PATH} from "./Routing"
+import {FORGOT_PATH, LOGIN_PATH, PROFILE_PATH, REGISTER_PATH} from "./Routing"
 import style from "./Header.module.scss";
 import {logoutTC} from "./bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -20,6 +20,7 @@ const Header = () => {
         navigate(LOGIN_PATH)
     }
     const logoutHandler = () => {
+
         // @ts-ignore
         dispatch(logoutTC())
         navigate(LOGIN_PATH)
@@ -33,7 +34,6 @@ const Header = () => {
             {show && <NavLink className={setActive} to={LOGIN_PATH}>login</NavLink>}
             {show && <NavLink className={setActive} to={REGISTER_PATH}>register</NavLink>}
             {show && <NavLink className={setActive} to={FORGOT_PATH}>forgot</NavLink>}
-            {show && <NavLink className={setActive} to={NEW_PASSWORD_PATH}>newPassword</NavLink>}
             {show && <NavLink className={setActive} to={PROFILE_PATH}>profile</NavLink>}
             {isAuth && <button className={style.btn} onClick={logoutHandler}>log out</button>}
             {!isAuth && <button className={style.btn} onClick={loginHandler}>log in</button>}

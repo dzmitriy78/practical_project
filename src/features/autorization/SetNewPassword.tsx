@@ -46,7 +46,7 @@ const SetNewPassword = () => {
             <div style={{color: "red"}}>{formik.errors.password}</div> : null}
             <input
                 type={"text"}
-                placeholder="resetPasswordToken"
+                placeholder="set token"
                 {...formik.getFieldProps("resetPasswordToken")}
             />
             <button type={'submit'} className={style.button}>Send</button>

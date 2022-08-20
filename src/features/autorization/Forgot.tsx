@@ -3,12 +3,15 @@ import {useFormik} from "formik";
 import style from "./Login.module.scss";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, AppStoreType} from "../../main/bll/store";
-import {forgotPasswordTC} from "../../main/bll/forgotReducer";
+import {forgotInitialStateType, forgotPassword, forgotPasswordTC} from "../../main/bll/forgotReducer";
+import {useNavigate} from "react-router-dom";
+import {NEW_PASSWORD_PATH} from "../../main/Routing";
 
 const Forgot = () => {
 
-    const error = useSelector<AppStoreType, string | null | undefined>(state => state.forgot.error)
+    const {info, error} = useSelector<AppStoreType, forgotInitialStateType>(state => state.forgot)
     const dispatch: AppDispatch = useDispatch()
+    const navigate = useNavigate()
     const formik = useFormik({
         validate: (values) => {
             const errors: FormikErrorType = {};
@@ -22,33 +25,34 @@ const Forgot = () => {
         initialValues: {
             email: ''
         },
-        onSubmit:  (values) => {
+        onSubmit: (values) => {
             // @ts-ignore
             dispatch(forgotPasswordTC(values.email))
             formik.resetForm()
-            /*  navigate("/profile")*/
         }
     })
-    /*
-        if (isLoggedIn) {
-            return <Redirect to={"/"} />
-        }*/
-    return <div>
-        <div>To recovery password, enter your e-mail</div>
-        <form className={style.form} onSubmit={formik.handleSubmit}>
-            {error && <div>
-                {error}
+    return <>
+        {info && <div>Password recovery information has been sent to the email address provided</div>}
+        {error && <div>{error}</div>}
+        {info && setTimeout(() => {
+            dispatch(forgotPassword({info: "", error: ""}))
+            navigate(NEW_PASSWORD_PATH)
+        }, 3000)}
+        {!info && !error &&
+            <div>
+                <div>To recovery password, enter your e-mail</div>
+                <form className={style.form} onSubmit={formik.handleSubmit}>
+                    <input
+                        type={"email"}
+                        placeholder="Email"
+                        {...formik.getFieldProps("email")}
+                    />
+                    {formik.touched.email && formik.errors.email ?
+                        <div style={{color: "red"}}>{formik.errors.email}</div> : null}
+                    <button type={'submit'} className={style.button}>Send</button>
+                </form>
             </div>}
-            <input
-                type={"email"}
-                placeholder="Email"
-                {...formik.getFieldProps("email")}
-            />
-            {formik.touched.email && formik.errors.email ?
-                <div style={{color: "red"}}>{formik.errors.email}</div> : null}
-            <button type={'submit'} className={style.button}>Send</button>
-        </form>
-    </div>
+    </>
 };
 
 export default Forgot;

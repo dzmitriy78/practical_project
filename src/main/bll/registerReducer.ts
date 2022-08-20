@@ -1,7 +1,7 @@
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
 import {registerAPI, RegisterParamsType} from "../dal/MyAPI";
-import {authMe, SetErrorType} from "./loginReducer";
+import {authMe} from "./loginReducer";
 import {errorHandler} from "./errorHandler";
 
 const SET_REGISTER = "registerReducer/SET-REGISTER"
@@ -47,6 +47,6 @@ type RegisterInitialStateType = {
     email: string
 }
 
-type RegisterActionType = ReturnType<typeof setRegister> | SetErrorType
+type RegisterActionType = ReturnType<typeof setRegister>
 
 type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, RegisterActionType>

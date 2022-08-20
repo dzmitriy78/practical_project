@@ -6,6 +6,7 @@ import {errorHandler} from "./errorHandler";
 const SET_USER_DATA = "loginReducer/SET-USER-DATA"
 const SET_APP_INITIALIZED = "loginReducer/SET-APP-INITIALISED"
 const SET_ERROR = "loginReducer/SET-ERROR"
+const SET_IS_LOADING = "loginReducer/SET-IS-LOADING"
 
 export const setAuthUserData = (data: LoginInitialStateType) => ({
     type: SET_USER_DATA,
@@ -14,16 +15,22 @@ export const setAuthUserData = (data: LoginInitialStateType) => ({
 
 export const setAppInitializedAC = (isInitialized: boolean) => ({
     type: SET_APP_INITIALIZED,
-    payload: {isInitialized}
+    isInitialized
 }) as const
+export const setIsLoadingAC = (isLoading: boolean) => ({
+    type: SET_IS_LOADING,
+    isLoading
+}) as const
+
 
 export const setError = (error: string) => ({
     type: SET_ERROR,
-    payload: {error}
+    error
 }) as const
 
 const loginInitialState: LoginInitialStateType = {
     isAuth: false,
+    isLoading: false,
     isInitialized: false,
     userData: {
         avatar: "",
@@ -55,12 +62,17 @@ const loginReducer = (state = loginInitialState, action: AuthActionType): LoginI
         case SET_APP_INITIALIZED:
             return {
                 ...state,
-                isInitialized: action.payload.isInitialized,
+                isInitialized: action.isInitialized,
             }
         case SET_ERROR:
             return {
                 ...state,
-                error: action.payload.error
+                error: action.error
+            }
+        case SET_IS_LOADING:
+            return {
+                ...state,
+                isLoading: action.isLoading
             }
         default: {
             return state
@@ -131,6 +143,7 @@ export const initializeAppTC = (): ThunkType => async (dispatch) => {
 
 export type LoginInitialStateType = {
     isAuth: boolean
+    isLoading?: boolean
     isInitialized?: boolean
     userData: {
         avatar: string
@@ -155,16 +168,21 @@ type SetUserDataAT = {
 }
 type SetAppInitializedAT = {
     type: typeof SET_APP_INITIALIZED,
-    payload: AppInitializedType
+    isInitialized: boolean
 }
-export type SetErrorType = ReturnType<typeof setError>
+export type SetErrorType = {
+    type: typeof SET_ERROR,
+    error: string
+}
+type SetIsLoadingAT = {
+    type: typeof SET_IS_LOADING,
+    isLoading: boolean
+}
 
-type AuthActionType = SetUserDataAT | SetAppInitializedAT | SetErrorType
+type AuthActionType = SetUserDataAT | SetAppInitializedAT | SetErrorType | SetIsLoadingAT
 
 type AuthPayloadType = {
     data: LoginInitialStateType
 }
-type AppInitializedType = {
-    isInitialized: boolean
-}
+
 type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, AuthActionType>

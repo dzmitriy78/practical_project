@@ -139,15 +139,10 @@ export type UpdatedUserType = {
 }
 
 export type ForgotResponseType = {
-    error?: string,
-    info: string,
-    errorObject?: {
-        code: string,
-        command: string
-    },
-    in: string
+    info: string
+    error: string
 }
 export type setNewPasswordResponseType = {
     info: string
-    error?: string
+    error: string
 }

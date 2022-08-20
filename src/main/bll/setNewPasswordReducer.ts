@@ -17,9 +17,9 @@ const setNewPasswordReducer = (state = setNewPasswordInitialState, action: SetNe
 
     switch (action.type) {
         case SET_NEW_PASSWORD:
-            return <setNewPasswordInitialStateType>{
+            return {
                 ...state,
-                data: action.payload.data
+                ...action.payload.data
             }
         default: {
             return state
@@ -36,8 +36,6 @@ export const setNewPasswordTC = (password: string, token: string): ThunkType=> a
         errorHandler(e, dispatch)
     }
 }
-
-
 
 type setNewPasswordInitialStateType = {
     info: string,
