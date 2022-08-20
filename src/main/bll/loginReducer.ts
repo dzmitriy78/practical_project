@@ -82,6 +82,7 @@ const loginReducer = (state = loginInitialState, action: AuthActionType): LoginI
 export default loginReducer;
 
 export const authMe = (): ThunkType => async (dispatch) => {
+    dispatch(setIsLoadingAC(true))
     try {
         const data = await authAPI.me()
         if (data) {
@@ -89,21 +90,25 @@ export const authMe = (): ThunkType => async (dispatch) => {
         }
     } catch (e: any) {
         errorHandler(e, dispatch)
+    } finally {
+        dispatch(setIsLoadingAC(false))
     }
 }
 
 export const loginTC = (data: LoginParamsType): ThunkType => async (dispatch) => {
-    //dispatch(setAppStatusAC({status:'loading'}))
+    dispatch(setIsLoadingAC(true))
     try {
         await authAPI.login(data)
         await dispatch(authMe())
     } catch (e: any) {
         errorHandler(e, dispatch)
+    } finally {
+        dispatch(setIsLoadingAC(false))
     }
 }
 
 export const logoutTC = (): ThunkType => async (dispatch) => {
-
+    dispatch(setIsLoadingAC(true))
     try {
         await authAPI.logout()
         dispatch(setAuthUserData({
@@ -126,10 +131,13 @@ export const logoutTC = (): ThunkType => async (dispatch) => {
         }))
     } catch (e: any) {
         errorHandler(e, dispatch)
+    } finally {
+        dispatch(setIsLoadingAC(false))
     }
 }
 
 export const initializeAppTC = (): ThunkType => async (dispatch) => {
+    dispatch(setIsLoadingAC(true))
     try {
         const data = await authAPI.me()
         if (data) {
@@ -138,6 +146,8 @@ export const initializeAppTC = (): ThunkType => async (dispatch) => {
         }
     } catch (e: any) {
         errorHandler(e, dispatch)
+    } finally {
+        dispatch(setIsLoadingAC(false))
     }
 }
 
@@ -174,7 +184,7 @@ export type SetErrorType = {
     type: typeof SET_ERROR,
     error: string
 }
-type SetIsLoadingAT = {
+export type SetIsLoadingAT = {
     type: typeof SET_IS_LOADING,
     isLoading: boolean
 }

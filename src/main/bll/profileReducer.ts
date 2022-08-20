@@ -2,7 +2,7 @@ import {registerAPI, UpdatedUserType} from "../dal/MyAPI";
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
 import {errorHandler} from "./errorHandler";
-import {authMe} from "./loginReducer";
+import {authMe, setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
 
 const UPDATE_USER = "profileReducer/UPDATE-USER"
 
@@ -45,6 +45,7 @@ const profileReducer = (state = profileInitialState, action: ProfileReducerAT): 
 }
 
 export const updateUserTC = (name: string, avatar: string): ThunkType => async (dispatch) => {
+    dispatch(setIsLoadingAC(true))
     try {
         const res = await registerAPI.updateUser(name, avatar)
         if (res)
@@ -52,6 +53,8 @@ export const updateUserTC = (name: string, avatar: string): ThunkType => async (
         dispatch(authMe())
     } catch (e: any) {
         errorHandler(e, dispatch)
+    } finally {
+        dispatch(setIsLoadingAC(false))
     }
 }
 
@@ -76,6 +79,6 @@ type ProfileReducerType = {
     token?: string,
     tokenDeathTime?: number
 }
-type ProfileReducerAT = RenameUserAT
+type ProfileReducerAT = RenameUserAT | SetIsLoadingAT
 type RenameUserAT = ReturnType<typeof renameUser>
 type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, ProfileReducerAT>

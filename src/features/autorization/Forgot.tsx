@@ -6,10 +6,13 @@ import {AppDispatch, AppStoreType} from "../../main/bll/store";
 import {forgotInitialStateType, forgotPassword, forgotPasswordTC} from "../../main/bll/forgotReducer";
 import {useNavigate} from "react-router-dom";
 import {NEW_PASSWORD_PATH} from "../../main/Routing";
+import {LoginInitialStateType} from "../../main/bll/loginReducer";
+import Loader from "../../main/ui/Loader";
 
 const Forgot = () => {
 
     const {info, error} = useSelector<AppStoreType, forgotInitialStateType>(state => state.forgot)
+    const {isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
     const dispatch: AppDispatch = useDispatch()
     const navigate = useNavigate()
     const formik = useFormik({
@@ -32,6 +35,7 @@ const Forgot = () => {
         }
     })
     return <>
+        {isLoading && <Loader/>}
         {info && <div>Password recovery information has been sent to the email address provided</div>}
         {error && <div>{error}</div>}
         {info && setTimeout(() => {

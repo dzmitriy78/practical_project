@@ -6,11 +6,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {Navigate, NavLink} from "react-router-dom";
 import {AppDispatch, AppStoreType} from "../../main/bll/store";
 import {FORGOT_PATH, PROFILE_PATH, REGISTER_PATH} from "../../main/Routing";
+import Loader from "../../main/ui/Loader";
 
 const Login = () => {
 
     const dispatch: AppDispatch = useDispatch()
-    const {isAuth, error} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
+    const {isAuth, error, isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
 
     const formik = useFormik({
         validate: (values) => {
@@ -46,6 +47,7 @@ const Login = () => {
     }
 
     return <div>
+        {isLoading && <Loader/>}
         <div>Please enter your login and password or <br/>
             <NavLink to={REGISTER_PATH}>Register</NavLink>
         </div>

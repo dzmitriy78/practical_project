@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, AppStoreType} from "../../main/bll/store";
-import {loginResponseType} from "../../main/dal/MyAPI";
 import {LOGIN_PATH, REGISTER_PATH} from "../../main/Routing";
 import {NavLink} from "react-router-dom";
 import {updateUserTC} from "../../main/bll/profileReducer";
+import Loader from "../../main/ui/Loader";
+import {LoginInitialStateType} from "../../main/bll/loginReducer";
 
 const Profile = () => {
-    let userData = useSelector<AppStoreType, loginResponseType>(state => state.login.userData)
-    let isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
+    const {isAuth, userData, isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
     const dispatch: AppDispatch = useDispatch()
     const [editName, setEditName] = useState(false)
     const [editAvatar, setEditAvatar] = useState(false)
@@ -33,6 +33,7 @@ const Profile = () => {
     }
     return (
         <>
+            {isLoading && <Loader/>}
             {isAuth
                 ? <div>
                     <div onBlur={setUpdateUser}>

@@ -4,9 +4,12 @@ import {AppDispatch, AppStoreType} from "../../main/bll/store";
 import {useFormik} from "formik";
 import style from "./Login.module.scss";
 import {setNewPasswordTC} from "../../main/bll/setNewPasswordReducer";
+import Loader from "../../main/ui/Loader";
+import {LoginInitialStateType} from "../../main/bll/loginReducer";
 
 const SetNewPassword = () => {
     const error = useSelector<AppStoreType, string | null | undefined>(state => state.forgot.error)
+    const {isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
     const dispatch: AppDispatch = useDispatch()
     const formik = useFormik({
         validate: (values) => {
@@ -32,6 +35,7 @@ const SetNewPassword = () => {
             return <Redirect to={"/"} />
         }*/
     return <div>
+        {isLoading && <Loader/>}
         <div>To restore access, enter a new password and the token received by email</div>
         <form className={style.form} onSubmit={formik.handleSubmit}>
             {error && <div>

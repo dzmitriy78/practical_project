@@ -5,12 +5,13 @@ import {useFormik} from "formik";
 import {useNavigate} from "react-router-dom";
 import style from "./Login.module.scss";
 import {registerTC} from "../../main/bll/registerReducer";
+import {LoginInitialStateType} from "../../main/bll/loginReducer";
+import Loader from "../../main/ui/Loader";
 
 const Register: React.FC = () => {
     const dispatch: AppDispatch = useDispatch()
     const navigate = useNavigate()
-    const error = useSelector<AppStoreType, string | null | undefined>(state => state.login.error)
-
+    const {isLoading, error} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
     const formik = useFormik({
         validate: (values) => {
             const errors: FormikErrorType = {};
@@ -33,15 +34,12 @@ const Register: React.FC = () => {
              // @ts-ignore
             dispatch(registerTC(values))
             formik.resetForm()
-            navigate("/profile")
+           /* navigate("/profile")*/
         }
     })
-    /*
-        if (isLoggedIn) {
-            return <Redirect to={"/"} />
-        }*/
 
     return <div>
+        {isLoading && <Loader/>}
         <div>To register, enter your e-mail <br/>and create a password <br/>(at least 8 characters)</div>
         <form className={style.form} onSubmit={formik.handleSubmit}>
             {error && <div>
@@ -61,7 +59,6 @@ const Register: React.FC = () => {
             />
             {formik.touched.password && formik.errors.password ?
                 <div style={{color: "red"}}>{formik.errors.password}</div> : null}
-
             <button type={'submit'} className={style.button}>Register</button>
         </form>
     </div>

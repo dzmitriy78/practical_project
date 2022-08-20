@@ -1,7 +1,7 @@
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
 import {registerAPI, RegisterParamsType} from "../dal/MyAPI";
-import {authMe} from "./loginReducer";
+import {authMe, setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
 import {errorHandler} from "./errorHandler";
 
 const SET_REGISTER = "registerReducer/SET-REGISTER"
@@ -33,12 +33,15 @@ const registerReducer = (state = registerInitialState, action: RegisterActionTyp
 export default registerReducer;
 
 export const registerTC = (data: RegisterParamsType): ThunkType => async (dispatch) => {
+    dispatch(setIsLoadingAC(true))
     try {
         const res = await registerAPI.register(data)
         dispatch(setRegister({email: res.data.addedUser.email, name: res.data.addedUser.name}))
         dispatch(authMe())
     } catch (e: any) {
         errorHandler(e, dispatch)
+    } finally {
+        dispatch(setIsLoadingAC(false))
     }
 }
 
@@ -47,6 +50,6 @@ type RegisterInitialStateType = {
     email: string
 }
 
-type RegisterActionType = ReturnType<typeof setRegister>
+type RegisterActionType = ReturnType<typeof setRegister> | SetIsLoadingAT
 
 type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, RegisterActionType>
