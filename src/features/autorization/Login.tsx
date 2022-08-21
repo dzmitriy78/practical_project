@@ -7,6 +7,7 @@ import {Navigate, NavLink} from "react-router-dom";
 import {AppDispatch, AppStoreType} from "../../main/bll/store";
 import {FORGOT_PATH, PROFILE_PATH, REGISTER_PATH} from "../../main/Routing";
 import Loader from "../../main/ui/Loader";
+import MessagesDemo from "../../main/ui/Messages";
 
 const Login = () => {
 
@@ -34,27 +35,20 @@ const Login = () => {
         onSubmit: async (values) => {
             // @ts-ignore
             await dispatch(loginTC(values))
-            formik.resetForm()
+            /* formik.resetForm()*/
         }
     })
-    /*
-        if (isLoggedIn) {
-            return <Redirect to={"/"} />
-        }*/
 
-    if (isAuth) {
+    if (isAuth)
         return <Navigate replace to={PROFILE_PATH}/>
-    }
 
     return <div>
         {isLoading && <Loader/>}
         <div>Please enter your login and password or <br/>
             <NavLink to={REGISTER_PATH}>Register</NavLink>
         </div>
+        {error && <MessagesDemo errorMessage={error}/>}
         <form className={style.form} onSubmit={formik.handleSubmit}>
-            {error && <div>
-                {error}
-            </div>}
             <input
                 type={"email"}
                 placeholder="Email"
@@ -75,7 +69,7 @@ const Login = () => {
                 {...formik.getFieldProps("rememberMe")}
                 checked={formik.values.rememberMe}
             />
-            <button type={'submit'} className={style.button}>Login</button>
+            <button type={'submit'} className={style.button} disabled={isLoading}>Login</button>
         </form>
         <div>Forgot your password? <br/>
             <NavLink to={FORGOT_PATH}>Restore password</NavLink>

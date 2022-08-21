@@ -1,14 +1,13 @@
 import {setError} from "./loginReducer";
 import {AppDispatch} from "./store";
 
-export const errorHandler = (e: any, dispatch:AppDispatch) => {
+export const errorHandler = (e: any, dispatch: AppDispatch) => {
     const error = e.response
         ? e.response.data.error
         : (e.message + ', more details in the console')
-    /*console.log('Error: ' + {...e})*/
+    console.log('Error: ' + {...e})
     dispatch(setError(error))
 }
-
 
 
 /*

@@ -22,7 +22,8 @@ const registerReducer = (state = registerInitialState, action: RegisterActionTyp
         case SET_REGISTER:
             return {
                 ...state,
-                ...action.payload
+                name: action.payload.data.name,
+                email: action.payload.data.email
             }
         default: {
             return state
@@ -45,7 +46,7 @@ export const registerTC = (data: RegisterParamsType): ThunkType => async (dispat
     }
 }
 
-type RegisterInitialStateType = {
+export type RegisterInitialStateType = {
     name: string
     email: string
 }

@@ -5,8 +5,7 @@ import {errorHandler} from "./errorHandler";
 import {authMe, setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
 
 const UPDATE_USER = "profileReducer/UPDATE-USER"
-
-const renameUser = (data: UpdatedUserType | void) => ({
+const renameUser = (data: UpdatedUserType) => ({
     type: UPDATE_USER, payload: {data}
 }) as const
 

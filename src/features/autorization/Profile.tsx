@@ -33,6 +33,7 @@ const Profile = () => {
     }
     return (
         <>
+
             {isLoading && <Loader/>}
             {isAuth
                 ? <div>

@@ -28,9 +28,9 @@ const Forgot = () => {
         initialValues: {
             email: ''
         },
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             // @ts-ignore
-            dispatch(forgotPasswordTC(values.email))
+            await dispatch(forgotPasswordTC(values.email))
             formik.resetForm()
         }
     })
@@ -53,7 +53,7 @@ const Forgot = () => {
                     />
                     {formik.touched.email && formik.errors.email ?
                         <div style={{color: "red"}}>{formik.errors.email}</div> : null}
-                    <button type={'submit'} className={style.button}>Send</button>
+                    <button type={'submit'} className={style.button} disabled={isLoading}>Send</button>
                 </form>
             </div>}
     </>

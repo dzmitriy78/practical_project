@@ -37,17 +37,17 @@ export const registerAPI = {
     },
     updateUser(name: string, avatar: string) {
         return instance.put<UpdatedUserType>('auth/me', {name, avatar})
-            .then(res=>res.data)
+            .then(res => res.data)
             .catch(errorsAPIHandler)
     },
-    forgot(email: string, from: string = "hhh", message: string = "fff") {
-       return  instance.post<ForgotResponseType>("auth/forgot",{email, from, message })
-           .then(res=>res.data)
-           .catch(errorsAPIHandler)
+    forgot(email: string) {
+        return instance.post<ForgotResponseType>("auth/forgot", {email})
+            .then(res => res.data)
+            .catch(errorsAPIHandler)
     },
-    setNewPassword (password: string, resetPasswordToken: string) {
-        return instance.post<setNewPasswordResponseType>("auth/set-new-password",{password, resetPasswordToken})
-            .then(res=>res.data)
+    setNewPassword(password: string, resetPasswordToken: string) {
+        return instance.post<setNewPasswordResponseType>("auth/set-new-password", {password, resetPasswordToken})
+            .then(res => res.data)
             .catch(errorsAPIHandler)
     }
 }
@@ -114,10 +114,7 @@ export type RegisterResponseType = {
         __v: number
     }
 }
-export type UpdateUserParamsType = {
-    name: string
-    avatar: string
-}
+
 export type UpdatedUserType = {
     updatedUser: {
         _id?: string,

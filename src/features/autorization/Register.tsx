@@ -4,14 +4,16 @@ import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
 import {useNavigate} from "react-router-dom";
 import style from "./Login.module.scss";
-import {registerTC} from "../../main/bll/registerReducer";
+import {RegisterInitialStateType, registerTC} from "../../main/bll/registerReducer";
 import {LoginInitialStateType} from "../../main/bll/loginReducer";
 import Loader from "../../main/ui/Loader";
+import MessagesDemo from "../../main/ui/Messages";
 
 const Register: React.FC = () => {
     const dispatch: AppDispatch = useDispatch()
     const navigate = useNavigate()
     const {isLoading, error} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
+    const {email} = useSelector<AppStoreType, RegisterInitialStateType>(state => state.register)
     const formik = useFormik({
         validate: (values) => {
             const errors: FormikErrorType = {};
@@ -29,22 +31,20 @@ const Register: React.FC = () => {
             email: '',
             password: ''
         },
-        onSubmit: (values) => {
-
-             // @ts-ignore
-            dispatch(registerTC(values))
+        onSubmit: async (values) => {
+            // @ts-ignore
+            await dispatch(registerTC(values))
             formik.resetForm()
-           /* navigate("/profile")*/
+            /* navigate("/profile")*/
         }
     })
 
     return <div>
         {isLoading && <Loader/>}
-        <div>To register, enter your e-mail <br/>and create a password <br/>(at least 8 characters)</div>
+        {error && <MessagesDemo errorMessage={error}/>}
+        {email && <MessagesDemo message={email}/>}
+        <div>To register, enter your e-mail <br/>and create a password <br/>(at least 7 characters)</div>
         <form className={style.form} onSubmit={formik.handleSubmit}>
-            {error && <div>
-                {error}
-            </div>}
             <input
                 type={"email"}
                 placeholder="Email"
@@ -59,7 +59,7 @@ const Register: React.FC = () => {
             />
             {formik.touched.password && formik.errors.password ?
                 <div style={{color: "red"}}>{formik.errors.password}</div> : null}
-            <button type={'submit'} className={style.button}>Register</button>
+            <button type={'submit'} className={style.button} disabled={isLoading}>Register</button>
         </form>
     </div>
 }
