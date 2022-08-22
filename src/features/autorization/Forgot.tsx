@@ -2,18 +2,19 @@ import React from 'react';
 import {useFormik} from "formik";
 import style from "./Login.module.scss";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, AppStoreType} from "../../main/bll/store";
-import {forgotInitialStateType, forgotPassword, forgotPasswordTC} from "../../main/bll/forgotReducer";
+import {AppStoreType} from "../../main/bll/store";
+import {forgotPassword, forgotPasswordTC} from "../../main/bll/forgotReducer";
 import {useNavigate} from "react-router-dom";
 import {LOGIN_PATH} from "../../main/Routing";
-import {LoginInitialStateType, setError} from "../../main/bll/loginReducer";
+import {setError} from "../../main/bll/loginReducer";
 import Loader from "../../main/ui/Loader";
 
 const Forgot = () => {
 
-    const {info, error} = useSelector<AppStoreType, forgotInitialStateType>(state => state.forgot)
-    const {isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
-    const dispatch: AppDispatch = useDispatch()
+    const info = useSelector<AppStoreType, string>(state => state.forgot.info)
+    const error = useSelector<AppStoreType, string>(state => state.forgot.error)
+    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const formik = useFormik({
         validate: (values) => {
@@ -28,9 +29,9 @@ const Forgot = () => {
         initialValues: {
             email: ''
         },
-        onSubmit: async (values): Promise<void> => {
+        onSubmit: (values) => {
             // @ts-ignore
-            await dispatch(forgotPasswordTC(values.email))
+            dispatch(forgotPasswordTC(values.email))
             formik.resetForm()
         }
     })

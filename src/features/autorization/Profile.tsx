@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, AppStoreType} from "../../main/bll/store";
+import {AppStoreType} from "../../main/bll/store";
 import {LOGIN_PATH, REGISTER_PATH} from "../../main/Routing";
 import {NavLink} from "react-router-dom";
 import {updateUserTC} from "../../main/bll/profileReducer";
 import Loader from "../../main/ui/Loader";
-import {LoginInitialStateType} from "../../main/bll/loginReducer";
+import {UserDataType} from "../../main/bll/loginReducer";
 
 const Profile = () => {
-    const {isAuth, userData, isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
-    const dispatch: AppDispatch = useDispatch()
+    const isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
+    const userData = useSelector<AppStoreType, UserDataType>((state) => state.login.userData)
+    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const dispatch = useDispatch()
     const [editName, setEditName] = useState(false)
     const [editAvatar, setEditAvatar] = useState(false)
     const [newName, setNewName] = useState<string>(userData.name)
@@ -26,14 +28,13 @@ const Profile = () => {
         setEditName(false)
         if (newName || newAvatar) {
             // @ts-ignore
-            await dispatch(updateUserTC(newName, newAvatar))
+            dispatch(updateUserTC(newName, newAvatar))
             setNewName("")
             setNewAvatar("")
         }
     }
     return (
         <>
-
             {isLoading && <Loader/>}
             {isAuth
                 ? <div>

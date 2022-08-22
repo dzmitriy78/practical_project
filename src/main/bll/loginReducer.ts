@@ -145,23 +145,26 @@ export type LoginInitialStateType = {
     isAuth: boolean
     isLoading?: boolean
     isInitialized?: boolean
-    userData: {
-        avatar: string
-        created: string
-        email: string
-        isAdmin: boolean
-        name: string
-        publicCardPacksCount: number
-        rememberMe: boolean
-        token: string
-        tokenDeathTime: number
-        updated: string
-        verified: boolean
-        __v?: number
-        _id?: string
-    }
+    userData: UserDataType
     error?: string | null
 }
+
+export type UserDataType = {
+    avatar: string
+    created: string
+    email: string
+    isAdmin: boolean
+    name: string
+    publicCardPacksCount: number
+    rememberMe: boolean
+    token: string
+    tokenDeathTime: number
+    updated: string
+    verified: boolean
+    __v?: number
+    _id?: string
+}
+
 type SetUserDataAT = {
     type: typeof SET_USER_DATA,
     payload: AuthPayloadType

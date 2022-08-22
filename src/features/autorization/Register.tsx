@@ -1,19 +1,19 @@
 import React from 'react';
-import {AppDispatch, AppStoreType} from "../../main/bll/store";
+import {AppStoreType} from "../../main/bll/store";
 import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
 import {useNavigate} from "react-router-dom";
 import style from "./Login.module.scss";
-import {RegisterInitialStateType, registerTC} from "../../main/bll/registerReducer";
-import {LoginInitialStateType} from "../../main/bll/loginReducer";
+import {registerTC} from "../../main/bll/registerReducer";
 import Loader from "../../main/ui/Loader";
 import MessagesDemo from "../../main/ui/Messages";
 
 const Register: React.FC = () => {
-    const dispatch: AppDispatch = useDispatch()
+    const dispatch = useDispatch()
     const navigate = useNavigate()
-    const {isLoading, error} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
-    const {email} = useSelector<AppStoreType, RegisterInitialStateType>(state => state.register)
+    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const error = useSelector<AppStoreType, string | null | undefined>((state) => state.login.error)
+    const email = useSelector<AppStoreType, string>(state => state.register.email)
     const formik = useFormik({
         validate: (values) => {
             const errors: FormikErrorType = {};
@@ -31,9 +31,9 @@ const Register: React.FC = () => {
             email: '',
             password: ''
         },
-        onSubmit: async (values): Promise<void> => {
+        onSubmit: (values) => {
             // @ts-ignore
-           await dispatch(registerTC(values))
+            dispatch(registerTC(values))
             formik.resetForm()
             /* navigate("/profile")*/
         }

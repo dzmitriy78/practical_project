@@ -1,7 +1,7 @@
 import {setError} from "./loginReducer";
-import {AppDispatch} from "./store";
+import {Dispatch} from "redux";
 
-export const errorHandler = (e: any, dispatch: AppDispatch) => {
+export const errorHandler = (e: any, dispatch: Dispatch) => {
     const error = e.response
         ? e.response.data.error
         : (e.message + ', more details in the console')
