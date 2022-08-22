@@ -1,20 +1,23 @@
 import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, AppStoreType} from "../../main/bll/store";
+import {AppStoreType} from "../../main/bll/store";
 import {useFormik} from "formik";
 import style from "./Login.module.scss";
-import {setNewPasswordInitialStateType, setNewPasswordTC} from "../../main/bll/setNewPasswordReducer";
+import {setNewPasswordTC, setupNewPassword} from "../../main/bll/setNewPasswordReducer";
 import Loader from "../../main/ui/Loader";
-import {LoginInitialStateType} from "../../main/bll/loginReducer";
+import {setError} from "../../main/bll/loginReducer";
 import MessagesDemo from "../../main/ui/Messages";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {LOGIN_PATH} from "../../main/Routing";
 
+
 const SetNewPassword = () => {
-    const {error, info} = useSelector<AppStoreType, setNewPasswordInitialStateType>(state => state.setNewPassword)
-    const {isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
-    const dispatch: AppDispatch = useDispatch()
+    const info = useSelector<AppStoreType, string>(state => state.setNewPassword.info)
+    const error = useSelector<AppStoreType, string | null | undefined>(state => state.login.error)
+    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const dispatch = useDispatch()
     const navigate = useNavigate()
+    const {token} = useParams()
     const formik = useFormik({
         validate: (values) => {
             const errors: FormikErrorType = {};
@@ -25,25 +28,25 @@ const SetNewPassword = () => {
         },
         initialValues: {
             password: '',
-            resetPasswordToken: ""
+            resetPasswordToken: token
         },
-        onSubmit: async (values) => {
+        onSubmit: (values) => {
             // @ts-ignore
-            await dispatch(setNewPasswordTC(values.password, values.resetPasswordToken))
+            dispatch(setNewPasswordTC(values.password, values.resetPasswordToken))
             formik.resetForm()
-            setTimeout(() => navigate(LOGIN_PATH), 4000)
         }
     })
-
-    return <div>
+    if (info) setTimeout(() => {
+        dispatch(setupNewPassword({info: "", error: ""}))
+        dispatch(setError(""))
+        navigate(LOGIN_PATH)
+    }, 4000)
+    return <>
         {isLoading && <Loader/>}
         {error && <MessagesDemo errorMessage={error}/>}
         {info && <MessagesDemo message={info}/>}
-        <div>To restore access, enter a new password and the token received by email</div>
+        <div>To restore access, enter a new password</div>
         <form className={style.form} onSubmit={formik.handleSubmit}>
-            {error && <div>
-                {error}
-            </div>}
             <input
                 type={"password"}
                 placeholder="set new password"
@@ -52,13 +55,13 @@ const SetNewPassword = () => {
             {formik.touched.password && formik.errors.password ?
                 <div style={{color: "red"}}>{formik.errors.password}</div> : null}
             <input
-                type={"text"}
+                type={"hidden"}
                 placeholder="set token"
                 {...formik.getFieldProps("resetPasswordToken")}
             />
             <button type={'submit'} className={style.button} disabled={isLoading}>Send</button>
         </form>
-    </div>
+    </>
 }
 
 export default SetNewPassword;

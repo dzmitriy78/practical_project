@@ -9,7 +9,7 @@ import Profile from "../features/autorization/Profile";
 export const LOGIN_PATH = '/login'
 export const REGISTER_PATH = '/register'
 export const FORGOT_PATH = '/forgot'
-export const NEW_PASSWORD_PATH = '/setNewPassword'
+export const NEW_PASSWORD_PATH = '/setNewPassword/:token'
 export const PROFILE_PATH = '/profile'
 
 const Routing = () => {

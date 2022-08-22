@@ -5,8 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, AppStoreType} from "../../main/bll/store";
 import {forgotInitialStateType, forgotPassword, forgotPasswordTC} from "../../main/bll/forgotReducer";
 import {useNavigate} from "react-router-dom";
-import {NEW_PASSWORD_PATH} from "../../main/Routing";
-import {LoginInitialStateType} from "../../main/bll/loginReducer";
+import {LOGIN_PATH} from "../../main/Routing";
+import {LoginInitialStateType, setError} from "../../main/bll/loginReducer";
 import Loader from "../../main/ui/Loader";
 
 const Forgot = () => {
@@ -28,20 +28,22 @@ const Forgot = () => {
         initialValues: {
             email: ''
         },
-        onSubmit: async (values) => {
+        onSubmit: async (values): Promise<void> => {
             // @ts-ignore
             await dispatch(forgotPasswordTC(values.email))
             formik.resetForm()
         }
     })
+    if (info) setTimeout(() => {
+        dispatch(forgotPassword({info: "", error: ""}))
+        dispatch(setError(""))
+        navigate(LOGIN_PATH)
+    }, 4000)
     return <>
         {isLoading && <Loader/>}
         {info && <div>Password recovery information has been sent to the email address provided</div>}
         {error && <div>{error}</div>}
-        {info && setTimeout(() => {
-            dispatch(forgotPassword({info: "", error: ""}))
-            navigate(NEW_PASSWORD_PATH)
-        }, 3000)}
+
         {!info && !error &&
             <div>
                 <div>To recovery password, enter your e-mail</div>

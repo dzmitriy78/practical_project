@@ -41,14 +41,16 @@ export const registerAPI = {
             .catch(errorsAPIHandler)
     },
     forgot(email: string) {
-        return instance.post<ForgotResponseType>("auth/forgot", {email})
+        return instance.post<ForgotResponseType>("auth/forgot", {
+            email, from: "test", message: `<div style="background-color: lime; padding: 15px"> 
+password recovery link:<a href='http://localhost:3000/setNewPassword/$token$'>link</a></div>`
+        })
             .then(res => res.data)
             .catch(errorsAPIHandler)
     },
     setNewPassword(password: string, resetPasswordToken: string) {
         return instance.post<setNewPasswordResponseType>("auth/set-new-password", {password, resetPasswordToken})
-            .then(res => res.data)
-            .catch(errorsAPIHandler)
+
     }
 }
 

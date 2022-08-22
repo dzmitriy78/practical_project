@@ -4,7 +4,7 @@ import {FORGOT_PATH, LOGIN_PATH, PROFILE_PATH, REGISTER_PATH} from "./Routing"
 import style from "./Header.module.scss";
 import {logoutTC} from "./bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, AppStoreType} from "./bll/store";
+import {AppStoreType} from "./bll/store";
 
 
 const Header = () => {
@@ -14,7 +14,7 @@ const Header = () => {
     const [show, setShow] = useState(false)
     const setActive = ({isActive}: { isActive: boolean }): string => isActive ? style.active : style.item
     const navigate = useNavigate()
-    const dispatch: AppDispatch = useDispatch()
+    const dispatch = useDispatch()
 
     const loginHandler = () => {
         navigate(LOGIN_PATH)

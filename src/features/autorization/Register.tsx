@@ -31,9 +31,9 @@ const Register: React.FC = () => {
             email: '',
             password: ''
         },
-        onSubmit: async (values) => {
+        onSubmit: async (values): Promise<void> => {
             // @ts-ignore
-            await dispatch(registerTC(values))
+           await dispatch(registerTC(values))
             formik.resetForm()
             /* navigate("/profile")*/
         }

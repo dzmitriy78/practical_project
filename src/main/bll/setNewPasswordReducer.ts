@@ -1,11 +1,11 @@
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
-import {registerAPI, setNewPasswordResponseType} from "../dal/MyAPI";
+import {registerAPI} from "../dal/MyAPI";
 import {errorHandler} from "./errorHandler";
 import {setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
 
 const SET_NEW_PASSWORD = "setNewPasswordReducer/SET-NEW-PASSWORD"
-const setupNewPassword = (data: setNewPasswordResponseType) => ({
+export const setupNewPassword = (data: setNewPasswordInitialStateType) => ({
     type: SET_NEW_PASSWORD,
     payload: {data}
 }) as const
@@ -34,18 +34,14 @@ export const setNewPasswordTC = (password: string, token: string): ThunkType => 
     dispatch(setIsLoadingAC(true))
     try {
         const res = await registerAPI.setNewPassword(password, token)
-        if (res)
-            dispatch(setupNewPassword({info: res.info, error: res.error}))
-    } catch (e) {
+        dispatch(setupNewPassword({info: res.data.info, error: res.data.error}))
+    } catch (e: any) {
         errorHandler(e, dispatch)
     } finally {
         dispatch(setIsLoadingAC(false))
     }
 }
 
-export type setNewPasswordInitialStateType = {
-    info: string,
-    error: string
-}
+export type setNewPasswordInitialStateType = typeof setNewPasswordInitialState
 type SetNewPasswordAT = ReturnType<typeof setupNewPassword> | SetIsLoadingAT
 type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, SetNewPasswordAT>

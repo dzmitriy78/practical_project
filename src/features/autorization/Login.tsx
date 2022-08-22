@@ -4,14 +4,14 @@ import style from "./Login.module.scss"
 import {LoginInitialStateType, loginTC} from "../../main/bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {Navigate, NavLink} from "react-router-dom";
-import {AppDispatch, AppStoreType} from "../../main/bll/store";
+import {AppStoreType} from "../../main/bll/store";
 import {FORGOT_PATH, PROFILE_PATH, REGISTER_PATH} from "../../main/Routing";
 import Loader from "../../main/ui/Loader";
 import MessagesDemo from "../../main/ui/Messages";
 
 const Login = () => {
 
-    const dispatch: AppDispatch = useDispatch()
+    const dispatch = useDispatch()
     const {isAuth, error, isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
 
     const formik = useFormik({
@@ -32,9 +32,9 @@ const Login = () => {
             password: '',
             rememberMe: false
         },
-        onSubmit: async (values) => {
+        onSubmit: (values) => {
             // @ts-ignore
-            await dispatch(loginTC(values))
+            dispatch(loginTC(values))
             /* formik.resetForm()*/
         }
     })

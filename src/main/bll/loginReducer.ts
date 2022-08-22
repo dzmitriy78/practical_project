@@ -137,18 +137,8 @@ export const logoutTC = (): ThunkType => async (dispatch) => {
 }
 
 export const initializeAppTC = (): ThunkType => async (dispatch) => {
-    dispatch(setIsLoadingAC(true))
-    try {
-        const data = await authAPI.me()
-        if (data) {
-            dispatch(setAuthUserData({isAuth: true, userData: data}))
-            dispatch(setAppInitializedAC(true))
-        }
-    } catch (e: any) {
-        errorHandler(e, dispatch)
-    } finally {
-        dispatch(setIsLoadingAC(false))
-    }
+    await dispatch(authMe())
+    dispatch(setAppInitializedAC(true))
 }
 
 export type LoginInitialStateType = {
