@@ -1,8 +1,8 @@
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
 import {registerAPI} from "../dal/MyAPI";
-import {errorHandler} from "./errorHandler";
-import {setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
+import {errorHandler} from "../../utils/errorHandler";
+import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
 
 const SET_NEW_PASSWORD = "setNewPasswordReducer/SET-NEW-PASSWORD"
 export const setupNewPassword = (data: setNewPasswordInitialStateType) => ({

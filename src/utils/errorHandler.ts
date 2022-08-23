@@ -1,4 +1,4 @@
-import {setError} from "./loginReducer";
+import {setError} from "../main/bll/loginReducer";
 import {Dispatch} from "redux";
 
 export const errorHandler = (e: any, dispatch: Dispatch) => {

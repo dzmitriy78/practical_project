@@ -5,8 +5,10 @@ import registerReducer from "./registerReducer";
 import forgotReducer from "./forgotReducer";
 import setNewPasswordReducer from "./setNewPasswordReducer";
 import profileReducer from "./profileReducer";
+import appReducer from "./appReducer";
 
 const rootReducer = combineReducers({
+    app: appReducer,
     login: loginReducer,
     register: registerReducer,
     forgot: forgotReducer,

@@ -1,18 +1,21 @@
 import React from 'react';
 import {useFormik} from "formik";
 import style from "./Login.module.scss"
-import {LoginInitialStateType, loginTC} from "../../main/bll/loginReducer";
+import {loginTC} from "../../main/bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
-import {Navigate, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import {AppStoreType} from "../../main/bll/store";
-import {FORGOT_PATH, PROFILE_PATH, REGISTER_PATH} from "../../main/Routing";
+import {FORGOT_PATH, REGISTER_PATH} from "../../main/Routing";
 import Loader from "../../main/ui/Loader";
 import MessagesDemo from "../../main/ui/Messages";
+import Welcome from "../../main/ui/Welcome";
 
 const Login = () => {
 
     const dispatch = useDispatch()
-    const {isAuth, error, isLoading} = useSelector<AppStoreType, LoginInitialStateType>((state) => state.login)
+    const isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
+    const error = useSelector<AppStoreType, string | undefined | null>((state) => state.login.error)
+    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
 
     const formik = useFormik({
         validate: (values) => {
@@ -39,42 +42,46 @@ const Login = () => {
         }
     })
 
-    if (isAuth)
-        return <Navigate replace to={PROFILE_PATH}/>
-
-    return <div>
+    return <>
         {isLoading && <Loader/>}
-        <div>Please enter your login and password or <br/>
-            <NavLink to={REGISTER_PATH}>Register</NavLink>
-        </div>
-        {error && <MessagesDemo errorMessage={error}/>}
-        <form className={style.form} onSubmit={formik.handleSubmit}>
-            <input
-                type={"email"}
-                placeholder="Email"
-                {...formik.getFieldProps("email")}
-            />
-            {formik.touched.email && formik.errors.email ?
-                <div style={{color: "red"}}>{formik.errors.email}</div> : null}
-            <input
-                type="password"
-                placeholder="Password"
-                {...formik.getFieldProps("password")}
-            />
-            {formik.touched.password && formik.errors.password ?
-                <div style={{color: "red"}}>{formik.errors.password}</div> : null}
-            <label> Remember me </label>
-            <input
-                type={"checkbox"}
-                {...formik.getFieldProps("rememberMe")}
-                checked={formik.values.rememberMe}
-            />
-            <button type={'submit'} className={style.button} disabled={isLoading}>Login</button>
-        </form>
-        <div>Forgot your password? <br/>
-            <NavLink to={FORGOT_PATH}>Restore password</NavLink>
-        </div>
-    </div>
+        {isAuth && <Welcome/>}
+        {!isAuth && <div>
+            <div>Please enter your login and password or <br/>
+                <NavLink to={REGISTER_PATH}>Register</NavLink>
+            </div>
+            {error && <MessagesDemo errorMessage={error}/>}
+            <form className={style.form} onSubmit={formik.handleSubmit}>
+                <input
+                    type={"email"}
+                    placeholder="Email"
+                    {...formik.getFieldProps("email")}
+                />
+                {formik.touched.email && formik.errors.email ?
+                    <div style={{color: "red"}}>{formik.errors.email}</div> : null}
+                <input
+                    type="password"
+                    placeholder="Password"
+                    {...formik.getFieldProps("password")}
+                />
+                {formik.touched.password && formik.errors.password ?
+                    <div style={{color: "red"}}>{formik.errors.password}</div> : null}
+                <label> Remember me </label>
+                <input
+                    type={"checkbox"}
+                    {...formik.getFieldProps("rememberMe")}
+                    checked={formik.values.rememberMe}
+                />
+                <button type={'submit'} className={style.button} disabled={isLoading}>Login</button>
+            </form>
+            <div>Forgot your password? <br/>
+                <NavLink to={FORGOT_PATH}>Restore password</NavLink>
+            </div>
+        </div>}
+
+
+
+
+    </>
 }
 
 export default Login;

@@ -14,7 +14,7 @@ import {LOGIN_PATH} from "../../main/Routing";
 const SetNewPassword = () => {
     const info = useSelector<AppStoreType, string>(state => state.setNewPassword.info)
     const error = useSelector<AppStoreType, string | null | undefined>(state => state.login.error)
-    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {token} = useParams()

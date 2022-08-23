@@ -1,8 +1,9 @@
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
 import {registerAPI, RegisterParamsType} from "../dal/MyAPI";
-import {authMe, setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
-import {errorHandler} from "./errorHandler";
+import {authMe} from "./loginReducer";
+import {errorHandler} from "../../utils/errorHandler";
+import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
 
 const SET_REGISTER = "registerReducer/SET-REGISTER"
 

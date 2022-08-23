@@ -1,8 +1,9 @@
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
 import {registerAPI} from "../dal/MyAPI";
-import {errorHandler} from "./errorHandler";
-import {setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
+import {errorHandler} from "../../utils/errorHandler";
+import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
+
 
 const FORGOT_PASSWORD = "forgotReducer/FORGOT-PASSWORD"
 

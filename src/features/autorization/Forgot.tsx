@@ -13,7 +13,7 @@ const Forgot = () => {
 
     const info = useSelector<AppStoreType, string>(state => state.forgot.info)
     const error = useSelector<AppStoreType, string>(state => state.forgot.error)
-    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.app.isLoading)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const formik = useFormik({

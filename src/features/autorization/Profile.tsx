@@ -10,7 +10,7 @@ import {UserDataType} from "../../main/bll/loginReducer";
 const Profile = () => {
     const isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
     const userData = useSelector<AppStoreType, UserDataType>((state) => state.login.userData)
-    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
     const dispatch = useDispatch()
     const [editName, setEditName] = useState(false)
     const [editAvatar, setEditAvatar] = useState(false)

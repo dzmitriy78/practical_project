@@ -11,7 +11,7 @@ import MessagesDemo from "../../main/ui/Messages";
 const Register: React.FC = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.login.isLoading)
+    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
     const error = useSelector<AppStoreType, string | null | undefined>((state) => state.login.error)
     const email = useSelector<AppStoreType, string>(state => state.register.email)
     const formik = useFormik({

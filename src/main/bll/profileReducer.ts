@@ -1,8 +1,9 @@
 import {registerAPI, UpdatedUserType} from "../dal/MyAPI";
 import {ThunkAction} from "redux-thunk";
 import {AppStoreType} from "./store";
-import {errorHandler} from "./errorHandler";
-import {authMe, setIsLoadingAC, SetIsLoadingAT} from "./loginReducer";
+import {errorHandler} from "../../utils/errorHandler";
+import {authMe} from "./loginReducer";
+import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
 
 const UPDATE_USER = "profileReducer/UPDATE-USER"
 const renameUser = (data: UpdatedUserType) => ({

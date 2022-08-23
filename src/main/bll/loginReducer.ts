@@ -1,25 +1,15 @@
 import {ThunkAction} from "redux-thunk";
 import {authAPI, LoginParamsType} from "../dal/MyAPI"
 import {AppStoreType} from "./store";
-import {errorHandler} from "./errorHandler";
+import {errorHandler} from "../../utils/errorHandler";
+import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
 
 const SET_USER_DATA = "loginReducer/SET-USER-DATA"
-const SET_APP_INITIALIZED = "loginReducer/SET-APP-INITIALISED"
 const SET_ERROR = "loginReducer/SET-ERROR"
-const SET_IS_LOADING = "loginReducer/SET-IS-LOADING"
 
 export const setAuthUserData = (data: LoginInitialStateType) => ({
     type: SET_USER_DATA,
     payload: {data}
-}) as const
-
-export const setAppInitializedAC = (isInitialized: boolean) => ({
-    type: SET_APP_INITIALIZED,
-    isInitialized
-}) as const
-export const setIsLoadingAC = (isLoading: boolean) => ({
-    type: SET_IS_LOADING,
-    isLoading
 }) as const
 
 
@@ -30,8 +20,6 @@ export const setError = (error: string) => ({
 
 const loginInitialState: LoginInitialStateType = {
     isAuth: false,
-    isLoading: false,
-    isInitialized: false,
     userData: {
         avatar: "",
         created: "",
@@ -56,23 +44,13 @@ const loginReducer = (state = loginInitialState, action: AuthActionType): LoginI
             return {
                 ...state,
                 isAuth: action.payload.data.isAuth,
-                isInitialized: action.payload.data.isInitialized,
                 userData: action.payload.data.userData
             }
-        case SET_APP_INITIALIZED:
-            return {
-                ...state,
-                isInitialized: action.isInitialized,
-            }
+
         case SET_ERROR:
             return {
                 ...state,
                 error: action.error
-            }
-        case SET_IS_LOADING:
-            return {
-                ...state,
-                isLoading: action.isLoading
             }
         default: {
             return state
@@ -136,15 +114,8 @@ export const logoutTC = (): ThunkType => async (dispatch) => {
     }
 }
 
-export const initializeAppTC = (): ThunkType => async (dispatch) => {
-    await dispatch(authMe())
-    dispatch(setAppInitializedAC(true))
-}
-
 export type LoginInitialStateType = {
     isAuth: boolean
-    isLoading?: boolean
-    isInitialized?: boolean
     userData: UserDataType
     error?: string | null
 }
@@ -169,20 +140,14 @@ type SetUserDataAT = {
     type: typeof SET_USER_DATA,
     payload: AuthPayloadType
 }
-type SetAppInitializedAT = {
-    type: typeof SET_APP_INITIALIZED,
-    isInitialized: boolean
-}
+
 export type SetErrorType = {
     type: typeof SET_ERROR,
     error: string
 }
-export type SetIsLoadingAT = {
-    type: typeof SET_IS_LOADING,
-    isLoading: boolean
-}
 
-type AuthActionType = SetUserDataAT | SetAppInitializedAT | SetErrorType | SetIsLoadingAT
+
+type AuthActionType = SetUserDataAT | SetErrorType | SetIsLoadingAT
 
 type AuthPayloadType = {
     data: LoginInitialStateType
