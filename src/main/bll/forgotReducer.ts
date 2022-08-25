@@ -35,15 +35,14 @@ export default forgotReducer;
 
 
 export const forgotPasswordTC = (email: string): ThunkType => async (dispatch) => {
-    dispatch(setIsLoadingAC(true))
+    dispatch(setIsLoadingAC('loading'))
     try {
         const data = await registerAPI.forgot(email)
         if (data)
             dispatch(forgotPassword(data))
+        dispatch(setIsLoadingAC('succeeded'))
     } catch (e: any) {
         errorHandler(e, dispatch)
-    } finally {
-        dispatch(setIsLoadingAC(false))
     }
 }
 

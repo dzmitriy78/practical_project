@@ -6,14 +6,14 @@ import {AppStoreType} from "../../main/bll/store";
 import {forgotPassword, forgotPasswordTC} from "../../main/bll/forgotReducer";
 import {useNavigate} from "react-router-dom";
 import {LOGIN_PATH} from "../../main/Routing";
-import {setError} from "../../main/bll/loginReducer";
 import Loader from "../../main/ui/Loader";
+import {RequestLoadingType, setError} from "../../main/bll/appReducer";
 
 const Forgot = () => {
 
     const info = useSelector<AppStoreType, string>(state => state.forgot.info)
-    const error = useSelector<AppStoreType, string>(state => state.forgot.error)
-    const isLoading = useSelector<AppStoreType, boolean | undefined>((state) => state.app.isLoading)
+    const error = useSelector<AppStoreType, string|null>(state => state.app.error)
+    const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const formik = useFormik({
@@ -37,11 +37,11 @@ const Forgot = () => {
     })
     if (info) setTimeout(() => {
         dispatch(forgotPassword({info: "", error: ""}))
-        dispatch(setError(""))
+        dispatch(setError(null))
         navigate(LOGIN_PATH)
     }, 4000)
     return <>
-        {isLoading && <Loader/>}
+        {isLoading==='loading' && <Loader/>}
         {info && <div>Password recovery information has been sent to the email address provided</div>}
         {error && <div>{error}</div>}
 
@@ -56,7 +56,7 @@ const Forgot = () => {
                     />
                     {formik.touched.email && formik.errors.email ?
                         <div style={{color: "red"}}>{formik.errors.email}</div> : null}
-                    <button type={'submit'} className={style.button} disabled={isLoading}>Send</button>
+                    <button type={'submit'} className={style.button} disabled={isLoading === 'loading'}>Send</button>
                 </form>
             </div>}
     </>

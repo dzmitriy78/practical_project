@@ -7,15 +7,14 @@ import {NavLink} from "react-router-dom";
 import {AppStoreType} from "../../main/bll/store";
 import {FORGOT_PATH, REGISTER_PATH} from "../../main/Routing";
 import Loader from "../../main/ui/Loader";
-import MessagesDemo from "../../main/ui/Messages";
 import Welcome from "../../main/ui/Welcome";
+import {RequestLoadingType} from "../../main/bll/appReducer";
 
 const Login = () => {
 
     const dispatch = useDispatch()
     const isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
-    const error = useSelector<AppStoreType, string | undefined | null>((state) => state.login.error)
-    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
+    const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
 
     const formik = useFormik({
         validate: (values) => {
@@ -43,13 +42,12 @@ const Login = () => {
     })
 
     return <>
-        {isLoading && <Loader/>}
+        {isLoading==='loading' && <Loader/>}
         {isAuth && <Welcome/>}
         {!isAuth && <div>
             <div>Please enter your login and password or <br/>
                 <NavLink to={REGISTER_PATH}>Register</NavLink>
             </div>
-            {error && <MessagesDemo errorMessage={error}/>}
             <form className={style.form} onSubmit={formik.handleSubmit}>
                 <input
                     type={"email"}
@@ -71,14 +69,12 @@ const Login = () => {
                     {...formik.getFieldProps("rememberMe")}
                     checked={formik.values.rememberMe}
                 />
-                <button type={'submit'} className={style.button} disabled={isLoading}>Login</button>
+                <button type={'submit'} className={style.button} disabled={isLoading === 'loading'}>Login</button>
             </form>
             <div>Forgot your password? <br/>
                 <NavLink to={FORGOT_PATH}>Restore password</NavLink>
             </div>
         </div>}
-
-
 
 
     </>

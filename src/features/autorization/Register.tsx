@@ -6,14 +6,13 @@ import {useNavigate} from "react-router-dom";
 import style from "./Login.module.scss";
 import {registerTC} from "../../main/bll/registerReducer";
 import Loader from "../../main/ui/Loader";
-import MessagesDemo from "../../main/ui/Messages";
+import {RequestLoadingType} from "../../main/bll/appReducer";
 
 const Register: React.FC = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
-    const error = useSelector<AppStoreType, string | null | undefined>((state) => state.login.error)
-    const email = useSelector<AppStoreType, string>(state => state.register.email)
+    const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
+
     const formik = useFormik({
         validate: (values) => {
             const errors: FormikErrorType = {};
@@ -40,9 +39,7 @@ const Register: React.FC = () => {
     })
 
     return <div>
-        {isLoading && <Loader/>}
-        {error && <MessagesDemo errorMessage={error}/>}
-        {email && <MessagesDemo message={email}/>}
+        {isLoading === 'loading' && <Loader/>}
         <div>To register, enter your e-mail <br/>and create a password <br/>(at least 7 characters)</div>
         <form className={style.form} onSubmit={formik.handleSubmit}>
             <input
@@ -59,7 +56,7 @@ const Register: React.FC = () => {
             />
             {formik.touched.password && formik.errors.password ?
                 <div style={{color: "red"}}>{formik.errors.password}</div> : null}
-            <button type={'submit'} className={style.button} disabled={isLoading}>Register</button>
+            <button type={'submit'} className={style.button} disabled={isLoading === 'loading'}>Register</button>
         </form>
     </div>
 }

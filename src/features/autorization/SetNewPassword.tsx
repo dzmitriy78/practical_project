@@ -3,18 +3,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../main/bll/store";
 import {useFormik} from "formik";
 import style from "./Login.module.scss";
-import {setNewPasswordTC, setupNewPassword} from "../../main/bll/setNewPasswordReducer";
+import {setNewPasswordTC} from "../../main/bll/setNewPasswordReducer";
 import Loader from "../../main/ui/Loader";
-import {setError} from "../../main/bll/loginReducer";
-import MessagesDemo from "../../main/ui/Messages";
 import {useNavigate, useParams} from "react-router-dom";
 import {LOGIN_PATH} from "../../main/Routing";
-
+import {RequestLoadingType} from "../../main/bll/appReducer";
 
 const SetNewPassword = () => {
     const info = useSelector<AppStoreType, string>(state => state.setNewPassword.info)
-    const error = useSelector<AppStoreType, string | null | undefined>(state => state.login.error)
-    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
+    const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const {token} = useParams()
@@ -37,14 +34,11 @@ const SetNewPassword = () => {
         }
     })
     if (info) setTimeout(() => {
-        dispatch(setupNewPassword({info: "", error: ""}))
-        dispatch(setError(""))
         navigate(LOGIN_PATH)
     }, 4000)
     return <>
-        {isLoading && <Loader/>}
-        {error && <MessagesDemo errorMessage={error}/>}
-        {info && <MessagesDemo message={info}/>}
+        {isLoading === 'loading' && <Loader/>}
+
         <div>To restore access, enter a new password</div>
         <form className={style.form} onSubmit={formik.handleSubmit}>
             <input
@@ -59,7 +53,7 @@ const SetNewPassword = () => {
                 placeholder="set token"
                 {...formik.getFieldProps("resetPasswordToken")}
             />
-            <button type={'submit'} className={style.button} disabled={isLoading}>Send</button>
+            <button type={'submit'} className={style.button} disabled={isLoading === 'loading'}>Send</button>
         </form>
     </>
 }

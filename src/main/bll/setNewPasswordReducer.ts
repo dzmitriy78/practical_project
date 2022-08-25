@@ -31,14 +31,13 @@ const setNewPasswordReducer = (state = setNewPasswordInitialState, action: SetNe
 export default setNewPasswordReducer
 
 export const setNewPasswordTC = (password: string, token: string): ThunkType => async (dispatch) => {
-    dispatch(setIsLoadingAC(true))
+    dispatch(setIsLoadingAC('loading'))
     try {
         const res = await registerAPI.setNewPassword(password, token)
         dispatch(setupNewPassword({info: res.data.info, error: res.data.error}))
+        dispatch(setIsLoadingAC('succeeded'))
     } catch (e: any) {
         errorHandler(e, dispatch)
-    } finally {
-        dispatch(setIsLoadingAC(false))
     }
 }
 

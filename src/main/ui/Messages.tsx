@@ -26,5 +26,5 @@ export default MessagesDemo
 
 type MessagesPropsType = {
     message?: string
-    errorMessage?: string
+    errorMessage?: string|null
 }

@@ -35,15 +35,14 @@ const registerReducer = (state = registerInitialState, action: RegisterActionTyp
 export default registerReducer;
 
 export const registerTC = (data: RegisterParamsType): ThunkType => async (dispatch) => {
-    dispatch(setIsLoadingAC(true))
+    dispatch(setIsLoadingAC('loading'))
     try {
         const res = await registerAPI.register(data)
         dispatch(setRegister({email: res.data.addedUser.email, name: res.data.addedUser.name}))
         dispatch(authMe())
+        dispatch(setIsLoadingAC('succeeded'))
     } catch (e: any) {
         errorHandler(e, dispatch)
-    } finally {
-        dispatch(setIsLoadingAC(false))
     }
 }
 

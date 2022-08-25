@@ -6,11 +6,12 @@ import {NavLink} from "react-router-dom";
 import {updateUserTC} from "../../main/bll/profileReducer";
 import Loader from "../../main/ui/Loader";
 import {UserDataType} from "../../main/bll/loginReducer";
+import {RequestLoadingType} from "../../main/bll/appReducer";
 
 const Profile = () => {
     const isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
     const userData = useSelector<AppStoreType, UserDataType>((state) => state.login.userData)
-    const isLoading = useSelector<AppStoreType, boolean>((state) => state.app.isLoading)
+    const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
     const dispatch = useDispatch()
     const [editName, setEditName] = useState(false)
     const [editAvatar, setEditAvatar] = useState(false)
@@ -35,7 +36,7 @@ const Profile = () => {
     }
     return (
         <>
-            {isLoading && <Loader/>}
+            {isLoading==='loading' && <Loader/>}
             {isAuth
                 ? <div>
                     <div onBlur={setUpdateUser}>

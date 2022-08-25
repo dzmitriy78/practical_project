@@ -45,16 +45,15 @@ const profileReducer = (state = profileInitialState, action: ProfileReducerAT): 
 }
 
 export const updateUserTC = (name: string, avatar: string): ThunkType => async (dispatch) => {
-    dispatch(setIsLoadingAC(true))
+    dispatch(setIsLoadingAC('loading'))
     try {
         const res = await registerAPI.updateUser(name, avatar)
         if (res)
             dispatch(renameUser(res))
         dispatch(authMe())
+        dispatch(setIsLoadingAC('succeeded'))
     } catch (e: any) {
         errorHandler(e, dispatch)
-    } finally {
-        dispatch(setIsLoadingAC(false))
     }
 }
 
