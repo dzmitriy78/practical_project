@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
 import {useSelector} from "react-redux";
 import {AppStoreType} from "../bll/store";
-import {loginResponseType} from "../dal/MyAPI";
+import {LoginResponseType} from "../dal/MyAPI";
 import {useNavigate} from "react-router-dom";
 import {PROFILE_PATH} from "../Routing";
 
 const Welcome = () => {
-    let userData = useSelector<AppStoreType, loginResponseType>(state => state.login.userData)
+    const userData = useSelector<AppStoreType, LoginResponseType>(state => state.login.userData)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -16,7 +16,7 @@ const Welcome = () => {
     }, [])
     return (
         <div>
-            "Привет, " + {userData.name}
+            Привет, {userData.name}
         </div>
     );
 };

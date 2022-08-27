@@ -1,10 +1,10 @@
 import React from 'react';
 import {useFormik} from "formik";
-import style from "./Login.module.scss"
+import style from "../../styles/Login.module.scss"
 import {loginTC} from "../../main/bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {NavLink} from "react-router-dom";
-import {AppStoreType} from "../../main/bll/store";
+import {AppStoreType, DispatchType} from "../../main/bll/store";
 import {FORGOT_PATH, REGISTER_PATH} from "../../main/Routing";
 import Loader from "../../main/ui/Loader";
 import Welcome from "../../main/ui/Welcome";
@@ -12,7 +12,7 @@ import {RequestLoadingType} from "../../main/bll/appReducer";
 
 const Login = () => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<DispatchType>()
     const isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
     const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
 
@@ -35,14 +35,21 @@ const Login = () => {
             rememberMe: false
         },
         onSubmit: (values) => {
-            // @ts-ignore
             dispatch(loginTC(values))
-            /* formik.resetForm()*/
         }
     })
 
+    function togglePassword() {
+        const x: any = document.getElementById("login");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+
     return <>
-        {isLoading==='loading' && <Loader/>}
+        {isLoading === 'loading' && <Loader/>}
         {isAuth && <Welcome/>}
         {!isAuth && <div>
             <div>Please enter your login and password or <br/>
@@ -59,10 +66,13 @@ const Login = () => {
                 <input
                     type="password"
                     placeholder="Password"
+                    id="login"
                     {...formik.getFieldProps("password")}
                 />
                 {formik.touched.password && formik.errors.password ?
                     <div style={{color: "red"}}>{formik.errors.password}</div> : null}
+                <label>Show Password</label>
+                <input type="checkbox" onClick={togglePassword}/>
                 <label> Remember me </label>
                 <input
                     type={"checkbox"}

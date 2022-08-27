@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {NavLink, useNavigate} from "react-router-dom";
 import {FORGOT_PATH, LOGIN_PATH, PROFILE_PATH, REGISTER_PATH} from "./Routing"
-import style from "./Header.module.scss";
+import style from "../styles/Header.module.scss";
 import {logoutTC} from "./bll/loginReducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "./bll/store";

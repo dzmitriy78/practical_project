@@ -1,5 +1,4 @@
-import {ThunkAction} from "redux-thunk";
-import {AppStoreType} from "./store";
+import {ThunkType} from "./store";
 import {authMe} from "./loginReducer";
 
 const SET_IS_LOADING = "loginReducer/SET-IS-LOADING"
@@ -57,14 +56,10 @@ export const initializeAppTC = (): ThunkType => async (dispatch) => {
     dispatch(setAppInitializedAC(true))
 }
 
-type SetAppInitializedAT = {
-    type: typeof SET_APP_INITIALIZED,
-    isInitialized: boolean
-}
+type SetAppInitializedAT = ReturnType<typeof setAppInitializedAC>
 export type SetIsLoadingAT = ReturnType<typeof setIsLoadingAC>
-
-export type RequestLoadingType = 'idle' | 'loading' | 'succeeded' | 'failed'
 export type SetErrorType = ReturnType<typeof setError>
+export type RequestLoadingType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
 export type appInitialStateType = {
     isLoading: RequestLoadingType,
@@ -72,5 +67,5 @@ export type appInitialStateType = {
     error: null | string
 }
 
-type AppReducerAT = SetAppInitializedAT | SetIsLoadingAT | SetErrorType
-type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, AppReducerAT>
+export type AppReducerAT = SetAppInitializedAT | SetIsLoadingAT | SetErrorType
+

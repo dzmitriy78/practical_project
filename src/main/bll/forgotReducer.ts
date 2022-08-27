@@ -1,5 +1,4 @@
-import {ThunkAction} from "redux-thunk";
-import {AppStoreType} from "./store";
+import {ThunkType} from "./store";
 import {registerAPI} from "../dal/MyAPI";
 import {errorHandler} from "../../utils/errorHandler";
 import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
@@ -12,7 +11,7 @@ export const forgotPassword = (data: forgotInitialStateType) => ({
     payload: {data}
 }) as const
 
-const forgotInitialState = {
+const forgotInitialState: forgotInitialStateType = {
     info: "",
     error: ""
 }
@@ -39,7 +38,7 @@ export const forgotPasswordTC = (email: string): ThunkType => async (dispatch) =
     try {
         const data = await registerAPI.forgot(email)
         if (data)
-            dispatch(forgotPassword(data))
+            dispatch(forgotPassword(data.data.data))
         dispatch(setIsLoadingAC('succeeded'))
     } catch (e: any) {
         errorHandler(e, dispatch)
@@ -50,5 +49,5 @@ export type forgotInitialStateType = {
     info: string
     error: string
 }
-type ForgotReducerAT = ReturnType<typeof forgotPassword> | SetIsLoadingAT
-type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, ForgotReducerAT>
+type forgotPasswordAT = ReturnType<typeof forgotPassword>
+export type ForgotReducerAT = forgotPasswordAT | SetIsLoadingAT

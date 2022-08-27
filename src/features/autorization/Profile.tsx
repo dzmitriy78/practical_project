@@ -1,23 +1,22 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {AppStoreType} from "../../main/bll/store";
+import {AppStoreType, DispatchType} from "../../main/bll/store";
 import {LOGIN_PATH, REGISTER_PATH} from "../../main/Routing";
 import {NavLink} from "react-router-dom";
 import {updateUserTC} from "../../main/bll/profileReducer";
 import Loader from "../../main/ui/Loader";
-import {UserDataType} from "../../main/bll/loginReducer";
 import {RequestLoadingType} from "../../main/bll/appReducer";
+import {UserDataType} from "../../main/dal/MyAPI";
 
 const Profile = () => {
     const isAuth = useSelector<AppStoreType, boolean>((state) => state.login.isAuth)
     const userData = useSelector<AppStoreType, UserDataType>((state) => state.login.userData)
     const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<DispatchType>()
     const [editName, setEditName] = useState(false)
     const [editAvatar, setEditAvatar] = useState(false)
     const [newName, setNewName] = useState<string>(userData.name)
-    const [newAvatar, setNewAvatar] = useState<string>(userData.avatar)
-
+    const [newAvatar, setNewAvatar] = useState<string>("")
     const changeAvatar: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
         setNewAvatar(e.currentTarget.value)
     }
@@ -25,23 +24,22 @@ const Profile = () => {
         setNewName(e.currentTarget.value)
     }
     const setUpdateUser = async () => {
-        setEditAvatar(false)
-        setEditName(false)
-        if (newName || newAvatar) {
-            // @ts-ignore
-            dispatch(updateUserTC(newName, newAvatar))
-            setNewName("")
-            setNewAvatar("")
-        }
+        await setEditAvatar(false)
+        await setEditName(false)
+
+        dispatch(updateUserTC(newName, newAvatar))
     }
+
     return (
         <>
-            {isLoading==='loading' && <Loader/>}
+            {isLoading === 'loading' && <Loader/>}
             {isAuth
                 ? <div>
                     <div onBlur={setUpdateUser}>
                         <div onDoubleClick={() => setEditAvatar(true)}>
-                            <img style={{maxWidth: "100px"}} src={userData.avatar} alt={"avatar"}/>
+                            <img style={{maxWidth: "100px"}}
+                                 src={userData.avatar}
+                                 alt={"avatar"}/>
                         </div>
                         {editAvatar && <input placeholder={"insert avatar"}
                                               autoFocus={true}
@@ -51,7 +49,7 @@ const Profile = () => {
                     </div>
                     <div onBlur={setUpdateUser}>
                         <div onDoubleClick={() => setEditName(true)}><span>Name: </span>{userData.name}</div>
-                        {editName && <input placeholder={"insert name"}
+                        {editName && <input placeholder={"enter image url"}
                                             autoFocus={true}
                                             onChange={changeName}
                                             defaultValue={userData.name}

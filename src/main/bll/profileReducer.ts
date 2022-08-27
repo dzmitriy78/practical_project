@@ -1,8 +1,7 @@
 import {registerAPI, UpdatedUserType} from "../dal/MyAPI";
-import {ThunkAction} from "redux-thunk";
-import {AppStoreType} from "./store";
+import {ThunkType} from "./store";
 import {errorHandler} from "../../utils/errorHandler";
-import {authMe} from "./loginReducer";
+import {setAuthUserData, SetUserDataAT} from "./loginReducer";
 import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
 
 const UPDATE_USER = "profileReducer/UPDATE-USER"
@@ -10,7 +9,7 @@ const renameUser = (data: UpdatedUserType) => ({
     type: UPDATE_USER, payload: {data}
 }) as const
 
-const profileInitialState = {
+const profileInitialState: ProfileInitialStateType = {
     updatedUser: {
         _id: "",
         email: "",
@@ -30,7 +29,7 @@ const profileInitialState = {
     tokenDeathTime: 0
 }
 
-const profileReducer = (state = profileInitialState, action: ProfileReducerAT): ProfileReducerType => {
+const profileReducer = (state = profileInitialState, action: ProfileReducerAT): ProfileInitialStateType => {
 
     switch (action.type) {
         case UPDATE_USER:
@@ -48,9 +47,9 @@ export const updateUserTC = (name: string, avatar: string): ThunkType => async (
     dispatch(setIsLoadingAC('loading'))
     try {
         const res = await registerAPI.updateUser(name, avatar)
-        if (res)
-            dispatch(renameUser(res))
-        dispatch(authMe())
+        if (res.data)
+            dispatch(renameUser(res.data))
+        dispatch(setAuthUserData({isAuth: true, userData: res.data.updatedUser}))
         dispatch(setIsLoadingAC('succeeded'))
     } catch (e: any) {
         errorHandler(e, dispatch)
@@ -59,25 +58,7 @@ export const updateUserTC = (name: string, avatar: string): ThunkType => async (
 
 export default profileReducer;
 
-type ProfileReducerType = {
-    updatedUser: {
-        _id?: string,
-        email?: string,
-        rememberMe?: boolean,
-        isAdmin?: boolean,
-        name: string,
-        verified?: boolean,
-        publicCardPacksCount?: number,
-        created?: string,
-        updated?: string,
-        __v?: number,
-        token?: string,
-        tokenDeathTime?: number,
-        avatar: string
-    },
-    token?: string,
-    tokenDeathTime?: number
-}
-type ProfileReducerAT = RenameUserAT | SetIsLoadingAT
+type ProfileInitialStateType = UpdatedUserType
+
+export type ProfileReducerAT = RenameUserAT | SetIsLoadingAT | SetUserDataAT
 type RenameUserAT = ReturnType<typeof renameUser>
-type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, ProfileReducerAT>

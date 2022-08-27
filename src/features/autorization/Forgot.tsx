@@ -1,20 +1,19 @@
 import React from 'react';
 import {useFormik} from "formik";
-import style from "./Login.module.scss";
+import style from "../../styles/Login.module.scss";
 import {useDispatch, useSelector} from "react-redux";
-import {AppStoreType} from "../../main/bll/store";
+import {AppStoreType, DispatchType} from "../../main/bll/store";
 import {forgotPassword, forgotPasswordTC} from "../../main/bll/forgotReducer";
 import {useNavigate} from "react-router-dom";
 import {LOGIN_PATH} from "../../main/Routing";
 import Loader from "../../main/ui/Loader";
-import {RequestLoadingType, setError} from "../../main/bll/appReducer";
+import {RequestLoadingType} from "../../main/bll/appReducer";
 
 const Forgot = () => {
 
     const info = useSelector<AppStoreType, string>(state => state.forgot.info)
-    const error = useSelector<AppStoreType, string|null>(state => state.app.error)
     const isLoading = useSelector<AppStoreType, RequestLoadingType>((state) => state.app.isLoading)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<DispatchType>()
     const navigate = useNavigate()
     const formik = useFormik({
         validate: (values) => {
@@ -30,22 +29,19 @@ const Forgot = () => {
             email: ''
         },
         onSubmit: (values) => {
-            // @ts-ignore
             dispatch(forgotPasswordTC(values.email))
             formik.resetForm()
         }
     })
     if (info) setTimeout(() => {
         dispatch(forgotPassword({info: "", error: ""}))
-        dispatch(setError(null))
         navigate(LOGIN_PATH)
     }, 4000)
     return <>
-        {isLoading==='loading' && <Loader/>}
+        {isLoading === 'loading' && <Loader/>}
         {info && <div>Password recovery information has been sent to the email address provided</div>}
-        {error && <div>{error}</div>}
 
-        {!info && !error &&
+        {!info &&
             <div>
                 <div>To recovery password, enter your e-mail</div>
                 <form className={style.form} onSubmit={formik.handleSubmit}>

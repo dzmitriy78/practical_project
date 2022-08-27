@@ -1,23 +1,20 @@
 import React, {useEffect} from 'react';
-import './App.css';
+import './styles/App.css';
 import Main from "./main/Main";
 import {useDispatch, useSelector} from "react-redux";
-import {AppStoreType} from "./main/bll/store";
+import {AppStoreType, DispatchType} from "./main/bll/store";
 import Loader from "./main/ui/Loader";
-import {initializeAppTC, RequestLoadingType} from "./main/bll/appReducer";
-import MessagesDemo from "./main/ui/Messages";
+import {initializeAppTC} from "./main/bll/appReducer";
+import Message from "./main/ui/Messages";
 
 const App: React.FC = () => {
-    const dispatch = useDispatch()
-    const isInitialized = useSelector<AppStoreType, boolean | undefined>((state) => state.app.isInitialized)
+    const dispatch = useDispatch<DispatchType>()
+    const isInitialized = useSelector<AppStoreType, boolean>((state) => state.app.isInitialized)
     const error = useSelector<AppStoreType, string | null>((state) => state.app.error)
     const email = useSelector<AppStoreType, string>(state => state.register.email)
     const info = useSelector<AppStoreType, string>(state => state.setNewPassword.info)
-    const isLoading = useSelector<AppStoreType, RequestLoadingType>(state => state.app.isLoading)
 
     useEffect(() => {
-
-        // @ts-ignore
         dispatch(initializeAppTC())
     }, [])
 
@@ -31,9 +28,9 @@ const App: React.FC = () => {
     return (
         <div className="App">
             <Main/>
-            {isLoading === "failed" && <MessagesDemo errorMessage={error}/>}
-            {isLoading === "succeeded" && email && <MessagesDemo message={email}/>}
-            {isLoading === "succeeded" && info && <MessagesDemo message={info}/>}
+            {error && <Message message={error}/>}
+            {email && <Message message={email}/>}
+            {info && <Message message={info}/>}
         </div>
     );
 }

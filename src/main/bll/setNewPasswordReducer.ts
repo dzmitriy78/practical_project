@@ -1,5 +1,4 @@
-import {ThunkAction} from "redux-thunk";
-import {AppStoreType} from "./store";
+import {ThunkType} from "./store";
 import {registerAPI} from "../dal/MyAPI";
 import {errorHandler} from "../../utils/errorHandler";
 import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
@@ -10,7 +9,7 @@ export const setupNewPassword = (data: setNewPasswordInitialStateType) => ({
     payload: {data}
 }) as const
 
-const setNewPasswordInitialState = {
+const setNewPasswordInitialState: setNewPasswordInitialStateType = {
     info: "",
     error: ""
 }
@@ -41,6 +40,9 @@ export const setNewPasswordTC = (password: string, token: string): ThunkType => 
     }
 }
 
-export type setNewPasswordInitialStateType = typeof setNewPasswordInitialState
-type SetNewPasswordAT = ReturnType<typeof setupNewPassword> | SetIsLoadingAT
-type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, SetNewPasswordAT>
+export type setNewPasswordInitialStateType = {
+    info: string
+    error: string
+}
+type setupNewPasswordAT = ReturnType<typeof setupNewPassword>
+export type SetNewPasswordAT = setupNewPasswordAT | SetIsLoadingAT

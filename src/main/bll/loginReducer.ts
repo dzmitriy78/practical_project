@@ -1,6 +1,5 @@
-import {ThunkAction} from "redux-thunk";
-import {authAPI, LoginParamsType} from "../dal/MyAPI"
-import {AppStoreType} from "./store";
+import {authAPI, LoginParamsType, UserDataType} from "../dal/MyAPI"
+import {ThunkType} from "./store";
 import {errorHandler} from "../../utils/errorHandler";
 import {setIsLoadingAC, SetIsLoadingAT} from "./appReducer";
 
@@ -49,21 +48,23 @@ export const authMe = (): ThunkType => async (dispatch) => {
     dispatch(setIsLoadingAC('loading'))
     try {
         const data = await authAPI.me()
-        if (data) {
-            dispatch(setAuthUserData({isAuth: true, userData: data}))
-        }
-        dispatch(setIsLoadingAC('succeeded'))
+        if (data)
+            dispatch(setAuthUserData({isAuth: true, userData: data.data}))
     } catch (e: any) {
-        errorHandler(e, dispatch)
+        console.log(e)
+    } finally {
+        dispatch(setIsLoadingAC('succeeded'))
     }
 }
 
 export const loginTC = (data: LoginParamsType): ThunkType => async (dispatch) => {
     dispatch(setIsLoadingAC('loading'))
     try {
-        await authAPI.login(data)
-        await dispatch(authMe())
-        dispatch(setIsLoadingAC('succeeded'))
+        const res = await authAPI.login(data)
+        if (res.data.email) {
+            dispatch(setAuthUserData({isAuth: true, userData: res.data}))
+            dispatch(setIsLoadingAC('succeeded'))
+        }
     } catch (e: any) {
         errorHandler(e, dispatch)
     }
@@ -102,31 +103,13 @@ export type LoginInitialStateType = {
     userData: UserDataType
 }
 
-export type UserDataType = {
-    avatar: string
-    created: string
-    email: string
-    isAdmin: boolean
-    name: string
-    publicCardPacksCount: number
-    rememberMe: boolean
-    token: string
-    tokenDeathTime: number
-    updated: string
-    verified: boolean
-    __v?: number
-    _id?: string
-}
-
-type SetUserDataAT = {
+export type SetUserDataAT = {
     type: typeof SET_USER_DATA,
     payload: AuthPayloadType
 }
 
-type AuthActionType = SetUserDataAT | SetIsLoadingAT
+export type AuthActionType = SetUserDataAT | SetIsLoadingAT
 
 type AuthPayloadType = {
     data: LoginInitialStateType
 }
-
-type ThunkType = ThunkAction<Promise<void>, AppStoreType, unknown, AuthActionType>
